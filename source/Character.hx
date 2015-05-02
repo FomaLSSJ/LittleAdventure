@@ -24,6 +24,11 @@ class Character extends FlxSprite
 	public var moveDir:String = "DOWN";
 	public var dialog:Array<String>;
 	
+	public var lv:UInt = 1;
+	public var hpMax:UInt = 100;
+	public var hp:UInt = 100;
+	public var kiMax:UInt = 100;
+	public var ki:UInt = 100;
 	
 	public function new(x:UInt, y:UInt, image:String, widthPx:Int = 16, heightPx:Int = 16, blockMap:FlxTilemap = null)
 	{

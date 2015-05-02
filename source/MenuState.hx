@@ -22,7 +22,7 @@ class MenuState extends FlxState
 	{
 		super.create();
 		
-		FlxG.sound.playMusic("assets/music/europe_the_final_countdown_8-bit.mp3", 1, true);
+		//FlxG.sound.playMusic("assets/music/europe_the_final_countdown_8-bit.mp3", 1, true); | Change Music
 		
 		flashAd.x = FlxG.width / 2;
 		flashAd.y = FlxG.height / 2 - 32;
@@ -54,7 +54,7 @@ class MenuState extends FlxState
 
 	private function onClickPlay():Void
 	{
-		FlxG.sound.music.stop();
+		//FlxG.sound.music.stop();
 		FlxG.switchState(new PlayState());
 	}
 	

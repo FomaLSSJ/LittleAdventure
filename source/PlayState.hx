@@ -26,18 +26,20 @@ class PlayState extends FlxState
 {
 	static public var characterList:Array<Dynamic> = [];
 	static public var doors:Array<Dynamic> = [];
+	static public var inv:FlxGroup = new FlxGroup();
+	static public var dialogIndex:Int = 0;
+	static public var invBg:FlxSprite;
+	static public var inventory:Inventory;
 	
-	private var inventory:Array<Dynamic> = [];
-	private var photoalbum:Array<Dynamic> = [];
 	private var tempArr:Array<Dynamic> = [];
 	private var menuChoice:Array<Dynamic> = [];
-	private var items:Array<Dynamic> = [];
-	private var photos:Array<Dynamic> = [];
 	
 	private var map:OgmoLoader;
 	private var mapBackground:FlxTilemap;
 	private var mapForeground:FlxTilemap;
 	private var mapBlock:FlxTilemap;
+	
+	private var battleSystem:BattleSystem;
 	
 	private var systemMsg:Character;
 	private var player:Character;
@@ -56,7 +58,6 @@ class PlayState extends FlxState
 	private var cg:FlxGroup = new FlxGroup();
 	private var gui:FlxGroup = new FlxGroup();
 	private var blank:FlxGroup = new FlxGroup();
-	private var inv:FlxGroup = new FlxGroup();
 	private var invScr:FlxGroup = new FlxGroup();
 	
 	private var disableAll:Bool = false;
@@ -65,11 +66,11 @@ class PlayState extends FlxState
 	private var invCheck:Bool = true;
 	private var imgLock:Bool = false;
 	private var dialogLock:Bool = false;
+	private var inCombat:Bool = false;
 	
 	private var letterCheck:Int = 3;
 	private var bootsTrigger:Bool = false;
 	
-	private var dialogIndex:Int = 0;
 	private var money:Int = 100;
 	private var selTrigger:Int = 0;
 	private var menuSelect:Int = 0;
@@ -99,7 +100,6 @@ class PlayState extends FlxState
 	
 	private var dialogBg:FlxSprite;
 	private var blankBg:FlxSprite;
-	private var invBg:FlxSprite;
 	private var invSel:FlxSprite;
 	private var imgShow:FlxSprite;
 	
@@ -172,13 +172,13 @@ class PlayState extends FlxState
 						   "::setMoney@-80,31",
 						   "Merchant: Alright, thanks for buy.",
 						   "::teleObj@9,6,2",
-						   "::changeCharLine@5,22",
+						   "::changeCharLine@5,29",
 						   "::endDialog",
 						   "Urf: Give me Jaguar.",
 						   "::setMoney@-50,31",
 						   "Merchant: Alright, thanks for buy.",
 						   "::teleObj@9,6,3",
-						   "::changeCharLine@5,22",
+						   "::changeCharLine@5,29",
 						   "::endDialog",
 						   "Urf: Give me Diskette.",
 						   "::setMoney@-50,31",
@@ -197,11 +197,11 @@ class PlayState extends FlxState
 						 "Urf: I masturbating this morning.\nI do not need a PC now.",
 						 "::endDialog",
 						 "Welcome in BolgenOS!",
-						 "/>a:\n/>dir\n--- photo_022812.img\n/>open photo_022812.img -gui",
+						 "$/>CD FLOPPY\n$/>LS\n--- photo_022812.img\n$/>SHOW photo_022812.img",
 						 "::showImage@floppyBeachgirl,320,240",
 						 "...",
 						 "::hideImage",
-						 "close image\n/>shutdown -h now"];
+						 "CLOSE photo\n$/>SHUTDOWN -h now"];
 		diskette = new Character(10, 5, imgDiskette);
 		diskette.name = "diskette";
 		diskette.dialog = ["::addItem@Diskette",
@@ -287,24 +287,34 @@ class PlayState extends FlxState
 		add(inv);
 		add(invSel);
 		
-		items.push(new Item("Pencil", imgPencil));
-		items.push(new Item("Letter", imgLetter));
-		items.push(new Item("Boots", imgBoots));
-		items.push(new Item("Jaguar", imgCan));
-		items.push(new Item("Diskette", imgDiskette));
+		inventory = new Inventory();
 		
-		addItem("Pencil");
-		addItem("Letter");
+		inventory.items.push(new Item("Pencil", imgPencil));
+		inventory.items.push(new Item("Letter", imgLetter));
+		inventory.items.push(new Item("Boots", imgBoots));
+		inventory.items.push(new Item("Jaguar", imgCan));
+		inventory.items.push(new Item("Diskette", imgDiskette));
 		
-		photos.push(new Photo("Beach Girl Photo Tits", imgPhoto, photoBeachGirlTits, 320, 240));
-		photos.push(new Photo("Beach Girl Photo Pussy", imgPhoto, photoBeachGirlPussy, 320, 240));
-		photos.push(new Photo("Beach Girl Photo Ass", imgPhoto, photoBeachGirlAss, 320, 240));
-		photos.push(new Photo("Beach Girl Photo Letter", imgPhoto, photoLetterPhoto, 320, 240));
+		inventory.addItem("Pencil");
+		inventory.addItem("Letter");
+		inventory.addItem("Jaguar");
+		inventory.addItem("Jaguar");
+		
+		inventory.photos.push(new Photo("Beach Girl Photo Tits", imgPhoto, photoBeachGirlTits, 320, 240));
+		inventory.photos.push(new Photo("Beach Girl Photo Pussy", imgPhoto, photoBeachGirlPussy, 320, 240));
+		inventory.photos.push(new Photo("Beach Girl Photo Ass", imgPhoto, photoBeachGirlAss, 320, 240));
+		inventory.photos.push(new Photo("Beach Girl Photo Letter", imgPhoto, photoLetterPhoto, 320, 240));
 		
 		gui.visible = false;
 		blank.visible = false;
 		inv.visible = false;
 		invSel.visible = false;
+		
+		battleSystem = new BattleSystem(); // Testing BattleSystem screen.
+		inCombat = true;
+		player.active = false;
+		battleSystem.initBattle(player, beachgirl);
+		add(battleSystem);
 		
 		super.create();
 	}
@@ -420,51 +430,6 @@ class PlayState extends FlxState
 		API.unlockMedal(medal);
 	}
 	
-	private function addItem(name:String):Void
-	{
-		var newItem:Item = null;
-		
-		var i:Int = 0;
-		for (i in 0...items.length)
-			if (items[i].name == name)
-				newItem = new Item(items[i].name, items[i].image);
-		
-		inventory.push(newItem);
-		inv.add(newItem);
-		
-		updateInv();
-	}
-	
-	private function addPhoto(name:String):Void
-	{
-		var newPhoto:Photo = null;
-		
-		var i:Int = 0;
-		for (i in 0...photos.length)
-			if (photos[i].name == name)
-				newPhoto = new Photo(photos[i].name, photos[i].image, photos[i].embed, photos[i].imgW, photos[i].imgH);
-		
-		newPhoto.scrollFactor.x = newPhoto.scrollFactor.y = 0;
-		photoalbum.push(newPhoto);
-		inv.add(newPhoto);
-		
-		updateInv();
-	}
-	
-	private function remItem(name:String):Void
-	{
-		var i:Int = 0;
-		for (i in 0...inventory.length)
-		{
-			if (inventory[i].name == name)
-			{
-				inv.remove(inventory[i], true);
-				inventory.splice(i, 1);
-				return;
-			}
-		}
-	}
-	
 	private function checkEvent():Void
 	{
 		while (checkLink(useNPC.dialog[dialogIndex]))
@@ -479,6 +444,26 @@ class PlayState extends FlxState
 	private function setQuestion(input:String):Void
 	{
 		dialogText.text = input;
+	}
+	
+	private function addItem(name:String):Void
+	{
+		inventory.addItem(name);
+	}
+	
+	private function addPhoto(name:String):Void
+	{
+		inventory.addPhoto(name);
+	}
+	
+	private function remItem(name:String):Void
+	{
+		inventory.remItem(name);
+	}
+	
+	private function checkItem(input:String):Void
+	{
+		inventory.checkItem(input);
 	}
 	
 	private function addAnswerInMenu(input:String):Void
@@ -533,15 +518,6 @@ class PlayState extends FlxState
 		gui.visible = true;
 	}
 	
-	private function checkItem(input:String):Void
-	{
-		for (i in 0...inventory.length)
-		{
-			if (inventory[i].name == input.split(",")[0])
-				dialogIndex = Std.parseInt(input.split(",")[1]);
-		}
-	}
-	
 	private function changeLine(line:String):Void
 	{
 		var lineIndex:Int = Std.parseInt(line);
@@ -576,13 +552,13 @@ class PlayState extends FlxState
 	{
 		if (line.substring(0, 2) == "::")
 		{
-			var func:String = "";
-			var arg:String = "";
+			var func, arg:String = "";
 			
 			if (line.split("@")[1] != null)
 			{
 				func = line.split("@")[0].substring(2);
 				arg = line.split("@")[1];
+				
 				this.field(func)(arg);
 			}
 			else
@@ -603,23 +579,6 @@ class PlayState extends FlxState
 	private function toogleBlank(input:String):Void
 	{	
 		blank.visible = Std.hasField(input);
-	}
-	
-	private function updateInv():Void
-	{
-		var i:Int = 0;
-		for (i in 0...inventory.length)
-		{
-			inventory[i].x = invBg.x + 20 * i + 4;
-			inventory[i].y = 196;
-		}
-		
-		var j:Int = 0;
-		for (j in 0...photoalbum.length)
-		{
-			photoalbum[j].x = invBg.x + 20 * j + 4;
-			photoalbum[j].y = 220;
-		}
 	}
 	
 	private function checkMoveDoor():Void
@@ -676,6 +635,15 @@ class PlayState extends FlxState
 		{
 			if (!freeze)
 			{
+				if (inCombat)
+				{
+					if (battleSystem.outcome == VICTORY)
+					{
+						inCombat = false;
+						player.active = true;
+					}
+				}
+				
 				if (!invTrg)
 				{
 					invSel.visible = false;
@@ -719,10 +687,10 @@ class PlayState extends FlxState
 				
 				if (_inv)
 				{
-					updateInv();
+					inventory.updateInv();
 					selTrigger = 0;
 					
-					if (inventory.length == 0 && photoalbum.length > 0)
+					if (inventory.inventory.length == 0 && inventory.photoalbum.length > 0)
 						invCheck = false;
 					
 					if (invTrg)
@@ -746,17 +714,17 @@ class PlayState extends FlxState
 				{
 					if (invCheck)
 					{
-						tempArr = inventory;
+						tempArr = inventory.inventory;
 						invSel.y = 196;
 					}
 					else
 					{
-						tempArr = photoalbum;
+						tempArr = inventory.photoalbum;
 						invSel.y = 220;
 					}
 					
 					invSel.x = invBg.x + 20 * selTrigger + 4;
-					if (inventory.length != 0 || photoalbum.length != 0)
+					if (inventory.inventory.length != 0 || inventory.photoalbum.length != 0)
 						invDiscr = tempArr[selTrigger].name;
 					selDiscr.text = "Info: " + invDiscr;
 					
@@ -782,20 +750,20 @@ class PlayState extends FlxState
 							}
 							if (FlxG.keys.anyJustPressed(["UP","W"]))
 							{
-								if (inventory.length > 0)
+								if (inventory.inventory.length > 0)
 								{
 									invCheck = true;
-									if (inventory.length - 1 < selTrigger)
-										selTrigger = inventory.length - 1;
+									if (inventory.inventory.length - 1 < selTrigger)
+										selTrigger = inventory.inventory.length - 1;
 								}
 							}
 							if (FlxG.keys.anyJustPressed(["DOWN","S"]))
 							{
-								if (photoalbum.length > 0)
+								if (inventory.photoalbum.length > 0)
 								{
 									invCheck = false;
-									if (photoalbum.length - 1 < selTrigger)
-										selTrigger = photoalbum.length - 1;
+									if (inventory.photoalbum.length - 1 < selTrigger)
+										selTrigger = inventory.photoalbum.length - 1;
 								}
 							}
 						}
@@ -807,7 +775,7 @@ class PlayState extends FlxState
 								if (!imgLock)
 								{
 									imgShow = new FlxSprite();
-									imgShow.loadGraphic(photoalbum[selTrigger].embed, false, photoalbum[selTrigger].imgW, photoalbum[selTrigger].imgH);
+									imgShow.loadGraphic(inventory.photoalbum[selTrigger].embed, false, inventory.photoalbum[selTrigger].imgW, inventory.photoalbum[selTrigger].imgH);
 									imgShow.x = (FlxG.width - imgShow.width) / 2;
 									imgShow.y = (FlxG.height - imgShow.height) / 2;
 									imgShow.scrollFactor.x = imgShow.scrollFactor.y = 0;
@@ -822,7 +790,7 @@ class PlayState extends FlxState
 							}
 							else
 							{
-								switch (inventory[selTrigger].name)
+								switch (inventory.inventory[selTrigger].name)
 								{
 									case "Pencil":
 										systemMsg.dialog = ["Urf: Hmm.. pencil."];
@@ -842,7 +810,6 @@ class PlayState extends FlxState
 											systemMsg.dialog = ["Urf: Hmm.. letter."];
 											callEventDialog(0, false, true);
 											letterCheck--;
-											trace("--> " + letterCheck);
 										}
 									case "Boots":
 										if (bootsTrigger == false)
