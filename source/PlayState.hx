@@ -39,6 +39,8 @@ class PlayState extends FlxState
 	private var mapForeground:FlxTilemap;
 	private var mapBlock:FlxTilemap;
 	
+	private var light:Light;
+	private var timeSystem:TimeSystem;
 	private var battleSystem:BattleSystem;
 	
 	private var systemMsg:Character;
@@ -51,10 +53,14 @@ class PlayState extends FlxState
 	private var merchant:Character;
 	private var pcHome:Character;
 	private var diskette:Character;
+	private var watches:Character;
+	private var bed:Character;
+	private var lighter:Character;
 	
 	private var background:FlxGroup = new FlxGroup();
 	private var foreground:FlxGroup = new FlxGroup();
 	private var objects:FlxGroup = new FlxGroup();
+	private var doorObjects:FlxGroup = new FlxGroup();
 	private var cg:FlxGroup = new FlxGroup();
 	private var gui:FlxGroup = new FlxGroup();
 	private var blank:FlxGroup = new FlxGroup();
@@ -67,6 +73,7 @@ class PlayState extends FlxState
 	private var imgLock:Bool = false;
 	private var dialogLock:Bool = false;
 	private var inCombat:Bool = false;
+	private var inside:Bool = false;
 	
 	private var letterCheck:Int = 3;
 	private var bootsTrigger:Bool = false;
@@ -96,6 +103,8 @@ class PlayState extends FlxState
 	private var imgBoots:String = "assets/images/boots.png";
 	private var imgCan:String = "assets/images/can.png";
 	private var imgDiskette:String = "assets/images/diskette.png";
+	private var imgWatches:String = "assets/images/watches.png";
+	private var imgLighter:String = "assets/images/lighter.png";
 	private var imgSel:String = "assets/images/select.png";
 	
 	private var dialogBg:FlxSprite;
@@ -208,6 +217,21 @@ class PlayState extends FlxState
 						   "::teleObj@-1,-1,7",
 						   "::changeCharLine@5,0",
 						   "--- You have found Diskette ---"];
+		watches = new Character(5, 1, imgWatches);
+		watches.name = "watches";
+		watches.dialog = ["::addItem@Watches",
+						   "::teleObj@-1,-1,8",
+						   "::changeCharLine@5,0",
+						   "--- You have found Watches ---"];
+		bed = new Character(7, 2, null);
+		bed.name = "bed";
+		bed.dialog = ["My bed."];
+		lighter = new Character(6, 5, imgLighter);
+		lighter.name = "lighter";
+		lighter.dialog = ["::addItem@Lighter",
+						   "::teleObj@-1,-1,10",
+						   "::changeCharLine@5,0",
+						   "--- You have found Lighter ---"];
 		
 		characterList.push(systemMsg);
 		characterList.push(player);
@@ -217,6 +241,9 @@ class PlayState extends FlxState
 		characterList.push(merchant);
 		characterList.push(pcHome);
 		characterList.push(diskette);
+		characterList.push(watches);
+		characterList.push(bed);
+		characterList.push(lighter);
 		
 		setMap("home1f");
 		
@@ -255,16 +282,24 @@ class PlayState extends FlxState
 		selDiscr = new FlxText(4, invBg.y + 2, FlxG.width, "Info: " + invDiscr);
 		selDiscr.scrollFactor.x = selDiscr.scrollFactor.y = 0;
 		
+		timeSystem = new TimeSystem();
+		light = new Light(timeSystem, 0, 0);
+		light.visible = false;
+		
 		background.add(mapBlock);
 		background.add(mapBackground);
 		
-		objects.add(player);
+		/* objects.add(player);
 		objects.add(boots);
 		objects.add(can);
 		objects.add(beachgirl);
 		objects.add(merchant);
 		objects.add(pcHome);
 		objects.add(diskette);
+		objects.add(watches); */
+		
+		for (i in 0...characterList.length)
+			objects.add(characterList[i]);
 		
 		foreground.add(mapForeground);
 		
@@ -280,7 +315,10 @@ class PlayState extends FlxState
 		
 		add(background);
 		add(objects);
+		add(light); //Lighter
+		add(doorObjects);
 		add(foreground);
+		add(timeSystem);
 		add(cg);
 		add(blank);
 		add(gui);
@@ -294,11 +332,11 @@ class PlayState extends FlxState
 		inventory.items.push(new Item("Boots", imgBoots));
 		inventory.items.push(new Item("Jaguar", imgCan));
 		inventory.items.push(new Item("Diskette", imgDiskette));
+		inventory.items.push(new Item("Watches", imgWatches));
+		inventory.items.push(new Item("Lighter", imgLighter));
 		
 		inventory.addItem("Pencil");
 		inventory.addItem("Letter");
-		inventory.addItem("Jaguar");
-		inventory.addItem("Jaguar");
 		
 		inventory.photos.push(new Photo("Beach Girl Photo Tits", imgPhoto, photoBeachGirlTits, 320, 240));
 		inventory.photos.push(new Photo("Beach Girl Photo Pussy", imgPhoto, photoBeachGirlPussy, 320, 240));
@@ -310,11 +348,11 @@ class PlayState extends FlxState
 		inv.visible = false;
 		invSel.visible = false;
 		
-		battleSystem = new BattleSystem(); // Testing BattleSystem screen.
+		/* battleSystem = new BattleSystem(); // Testing BattleSystem screen.
 		inCombat = true;
 		player.active = false;
 		battleSystem.initBattle(player, beachgirl);
-		add(battleSystem);
+		add(battleSystem); */
 		
 		super.create();
 	}
@@ -333,6 +371,9 @@ class PlayState extends FlxState
 			mapForeground = map.loadTilemap(AssetPaths.uptiles__png, 16, 16, "foreground");
 			mapBlock = map.loadTilemap(AssetPaths.dirblock__png, 16, 16, "blockpath");
 			
+			doors.splice(0, doors.length);
+			doorObjects.clear();
+			
 			map.loadEntities(placeEntities, "entities");
 			
 			player.setBlockMap(mapBlock);
@@ -347,14 +388,6 @@ class PlayState extends FlxState
 					characterList[i].enable = true;
 				else
 					characterList[i].enable = false;
-			}
-			
-			for (i in 0...doors.length)
-			{
-				if (doors[i].idMap == mapData)
-					doors[i].enable = true;
-				else
-					doors[i].enable = false;
 			}
 		}
 		
@@ -374,14 +407,20 @@ class PlayState extends FlxState
 		var y:Int = Std.parseInt(entityData.get("y"));
 		var mapData:String = entityData.get("mapData");
 		var mapInfo:String = map.loadMapValue("mapName");
+		var mapInside:String = map.loadMapValue("mapInside");
 		var posX:Int = Std.parseInt(entityData.get("posX"));
 		var posY:Int = Std.parseInt(entityData.get("posY"));
+		
+		if (mapInside == "True")
+			inside = false;
+		else
+			inside = true;
 		
 		if (entityName == "door")
 		{
 			var door:Door = new Door(mapData, posX, posY, x, y);
 			door.idMap = mapInfo;
-			objects.add(door);
+			doorObjects.add(door);
 			doors.push(door);
 		}
 		else
@@ -591,7 +630,10 @@ class PlayState extends FlxState
 				player.getNextTile(player.moveDir).y / 16 == doors[i].y / 16 &&
 				doors[i].enable)
 				if (player.checkPath)
+				{
 					setMap(doors[i].mapData, doors[i].posX, doors[i].posY);
+					break;
+				}
 			}
 		}
 	}
@@ -604,6 +646,11 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		super.update();
+		
+		timeSystem.visible = inside;
+		
+		light.x = player.x + (player.width / 2);
+		light.y = player.y + (player.height / 2);
 		
 		var _tempDir:String = "";
 		var _up:Bool = false;
@@ -829,6 +876,22 @@ class PlayState extends FlxState
 									case "Diskette":
 										systemMsg.dialog = ["Urf: Floppy Diskette 3.5\""];
 										callEventDialog(0, false, true);
+									case "Watches":
+										systemMsg.dialog = ["Urf: This time " + timeSystem.timeConvert()];
+										callEventDialog(0, false, true);
+									case "Lighter":
+										if (light.visible)
+										{
+											light.visible = false;
+											systemMsg.dialog = ["I put out a Lighter"];
+											callEventDialog(0, false, true);
+										}
+										else
+										{
+											light.visible = true;
+											systemMsg.dialog = ["I lit a Lighter"];
+											callEventDialog(0, false, true);
+										}
 								}
 							}
 						}

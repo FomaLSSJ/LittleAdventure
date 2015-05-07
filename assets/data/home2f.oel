@@ -1,4 +1,4 @@
-<level width="320" height="240" mapName="home2f">
+<level width="320" height="240" mapName="home2f" mapInside="True">
   <background tileset="backtileset" exportMode="CSV">-1,-1,-1,-1,47,47,47,47,47,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,240,241,55,242,243,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,248,249,34,244,245,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
@@ -48,5 +48,8 @@
     <door id="0" x="48" y="48" mapData="home1f" posX="7" posY="4" />
     <door id="1" x="32" y="48" mapData="home1f" posX="7" posY="4" />
     <pchome id="2" x="64" y="16" />
+    <watches id="3" x="80" y="16" />
+    <bed id="4" x="112" y="32" />
+    <lighter id="5" x="96" y="80" />
   </entities>
 </level>

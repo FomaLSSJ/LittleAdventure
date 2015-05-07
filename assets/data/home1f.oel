@@ -1,4 +1,4 @@
-<level width="320" height="240" mapName="home1f">
+<level width="320" height="240" mapName="home1f" mapInside="True">
   <background tileset="backtileset" exportMode="CSV">-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,47,47,47,47,0,47,47,47,47,-1,-1,-1,-1,-1,-1

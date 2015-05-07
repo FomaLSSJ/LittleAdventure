@@ -130,7 +130,6 @@ class BattleSystem extends FlxTypedGroup<Dynamic>
 	{
 		message.text = input;
 		message.alpha = 1;
-		
 	}
 	
 	private function escape():Void

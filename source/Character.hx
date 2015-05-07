@@ -215,6 +215,8 @@ class Character extends FlxSprite
 	
 	override public function update():Void
 	{
+		super.update();
+		
 		this.visible = this.enable;
 		
 		if (!moving)
@@ -243,6 +245,5 @@ class Character extends FlxSprite
 				moving = false;
 			}
 		}
-		super.update();
 	}
 }
