@@ -225,7 +225,19 @@ class PlayState extends FlxState
 						   "--- You have found Watches ---"];
 		bed = new Character(7, 2, null);
 		bed.name = "bed";
-		bed.dialog = ["My bed."];
+		bed.dialog = ["My bed.",
+					  "::setQuestion@Go to bed?",
+					  "::addAnswerInMenu@Yes,7",
+					  "::addAnswerInMenu@No,5",
+					  "::showMenuChoice",
+					  "Not now.",
+					  "::endDialog",
+					  "...",
+					  "::setBlank@true",
+					  "::nextDay",
+					  "Good mornong!",
+					  "::setBlank@false",
+					  "..."];
 		lighter = new Character(6, 5, imgLighter);
 		lighter.name = "lighter";
 		lighter.dialog = ["::addItem@Lighter",
@@ -447,6 +459,14 @@ class PlayState extends FlxState
 		dialogText.text = useNPC.dialog[0];
 	}
 	
+	private function setBlank(input:String):Void
+	{
+		if (input == "true")
+			blank.visible = true;
+		else
+			blank.visible = false;
+	}
+	
 	private function setMoney(input:String):Void
 	{
 		var count:Int = Std.parseInt(input.split(",")[0]);
@@ -478,6 +498,19 @@ class PlayState extends FlxState
 		}
 		if (!dialogLock)
 			dialogText.text = useNPC.dialog[dialogIndex];
+	}
+	
+	private function nextDay():Void
+	{
+		timeSystem.nextDay();
+	}
+	
+	private function dayCurrent():String
+	{
+		if (timeSystem != null)
+			return timeSystem.dayCurrent();
+		else
+			return "0";
 	}
 	
 	private function setQuestion(input:String):Void
@@ -877,7 +910,7 @@ class PlayState extends FlxState
 										systemMsg.dialog = ["Urf: Floppy Diskette 3.5\""];
 										callEventDialog(0, false, true);
 									case "Watches":
-										systemMsg.dialog = ["Urf: This time " + timeSystem.timeConvert()];
+										systemMsg.dialog = ["Urf: This time " + timeSystem.timeConvert() + ", current day " + timeSystem.dayCurrent()];
 										callEventDialog(0, false, true);
 									case "Lighter":
 										if (light.visible)

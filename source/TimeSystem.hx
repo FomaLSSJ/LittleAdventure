@@ -10,6 +10,7 @@ import flixel.util.FlxColorUtil.*;
 class TimeSystem extends FlxSpriteExt
 {
 	private var time:Float = 0;
+	private var days:Int = 1;
 	private var maxAlpha:Float = 0.98;
 	
 	private var colorArray:Array<Int> = [0xFF9C28, 0x75C7DD, 0x826287, 0x000000]; //0x0C0318];
@@ -30,7 +31,10 @@ class TimeSystem extends FlxSpriteExt
 		super.update();
 		
 		if (Math.floor(time) == 1440)
+		{
 			time = 0;
+			days++;
+		}
 		
 		if (Math.floor(time) > 480 && Math.floor(time) < 1200 && alpha > 0)
 		{
@@ -54,5 +58,17 @@ class TimeSystem extends FlxSpriteExt
 	public function timeConvert():String
 	{
 		return ("0" + Math.floor(time / 60)).substr( -2) + ":" + ("0" + Math.floor(time % 60)).substr( -2);
+	}
+	
+	public function nextDay():Void
+	{
+		time = 9 * 60;
+		alpha = 0;
+		days++;
+	}
+	
+	public function dayCurrent():String
+	{
+		return Std.string(days);
 	}
 }
