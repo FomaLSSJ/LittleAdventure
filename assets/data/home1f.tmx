@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="16" tileheight="16" backgroundcolor="#000000" nextobjectid="1">
+ <tileset firstgid="1" name="1" tilewidth="16" tileheight="16" tilecount="256">
+  <image source="../images/basictiles.png" width="128" height="512"/>
+ </tileset>
+ <tileset firstgid="257" name="2" tilewidth="16" tileheight="16" tilecount="256">
+  <image source="../images/uptiles.png" width="128" height="512"/>
+ </tileset>
+ <tileset firstgid="513" name="3" tilewidth="16" tileheight="16" tilecount="2">
+  <image source="../images/dirblock.png" width="32" height="16"/>
+ </tileset>
+ <layer name="background" width="20" height="15">
+  <properties>
+   <property name="tileset" value="basictiles.png"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztzl0KgkAUhmHXMpll2a+mkaChUO1/Bd22i17hE2QgmBm6CTrwgHPAdyaKfmte2Fs+7Vx7Fc4Tw+6C2tq59loc8MBM7+nQ6/z07Bkc0eCq98SYSxLQi/Wf0ZtyFDihDOgtkOrbqHfDPbA3WGGNTP2lpJ690QZb7Kx7jEfP5Z7Rf74/bx6bJKQ=
+  </data>
+ </layer>
+ <layer name="foreground" width="20" height="15">
+  <properties>
+   <property name="tileset" value="uptiles.png"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFIGDJyMDgA8S+jKjiRkC+GSN2PcQAfwr0DhXgSmU/OuIwD2YPteyD2YPLvlEw+AAAuYQDKA==
+  </data>
+ </layer>
+ <layer name="blockedtiles" width="20" height="15">
+  <properties>
+   <property name="tileset" value="dirblock.png"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBjZgImJeEyseeSKETIPn1socR+6+QNtHjFqiTUP2Uxkt2DjUwpITSujgHQAALctAKU=
+  </data>
+ </layer>
+</map>
