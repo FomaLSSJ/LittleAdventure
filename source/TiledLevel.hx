@@ -1,6 +1,7 @@
 package;
 
 import flixel.addons.editors.tiled.TiledTileLayer;
+import flixel.addons.editors.tiled.TiledLayer;
 import flixel.FlxG;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.FlxObject;
@@ -34,6 +35,7 @@ class TiledLevel extends TiledMap
  
             // 2) If the TMX is saved in base64, then use this:
             // (we shall assume our TMX is base64 format for now)
+            if (layer.type != TiledLayerType.TILE) continue;
 			var layerData:TiledTileLayer = cast layer;
 			
 			var tilesetName:String = layer.properties.get('tileset');

@@ -38,16 +38,16 @@ class PlayState extends FlxState
 		
 		trace(Reg.curent);
 		
-		/*
 		player = new Player(posX, posY, AssetPaths.char__png);
 		objectGroup.add(player);
-		*/
 		
+		/*
 		image = new ImageLoad(0, 0, Reg.server + Reg.image, function ()
 		{
 			player = new Player(posX, posY, image.bitmapData);
 			objectGroup.add(player);
 		});
+		*/
 		
 		status = new FlxText(10, 10, 128, Reg.name);
 		status.scrollFactor.set(0, 0);
