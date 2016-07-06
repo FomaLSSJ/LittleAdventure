@@ -20,8 +20,10 @@ class Door extends FlxSprite
 		makeGraphic(16,16, 0x0);
 	}
 	
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
+		super.update(elapsed);
+
 		this.visible = this.active;
 	}
 }

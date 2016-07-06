@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="30" tilewidth="16" tileheight="16" nextobjectid="8">
- <tileset firstgid="1" name="1" tilewidth="16" tileheight="16" tilecount="256">
+ <tileset firstgid="1" name="1" tilewidth="16" tileheight="16" tilecount="256" columns="8">
   <image source="../images/basictiles.png" width="128" height="512"/>
  </tileset>
- <tileset firstgid="257" name="2" tilewidth="16" tileheight="16" tilecount="256">
+ <tileset firstgid="257" name="2" tilewidth="16" tileheight="16" tilecount="256" columns="8">
   <image source="../images/uptiles.png" width="128" height="512"/>
  </tileset>
- <tileset firstgid="513" name="3" tilewidth="16" tileheight="16" tilecount="2">
+ <tileset firstgid="513" name="3" tilewidth="16" tileheight="16" tilecount="2" columns="2">
   <image source="../images/dirblock.png" width="32" height="16"/>
  </tileset>
  <layer name="blockedtiles" width="40" height="30">
@@ -34,7 +34,19 @@
   </data>
  </layer>
  <objectgroup name="doors">
-  <object id="4" name="house" x="160" y="96" width="16" height="16"/>
-  <object id="7" name="merchant" x="272.333" y="367.667" width="16" height="16"/>
+  <object id="4" name="house" x="160" y="96" width="16" height="16">
+   <properties>
+    <property name="map" value="home1f"/>
+    <property name="posX" type="int" value="8"/>
+    <property name="posY" type="int" value="9"/>
+   </properties>
+  </object>
+  <object id="7" name="market" x="272.333" y="367.667" width="16" height="16">
+   <properties>
+    <property name="map" value="market"/>
+    <property name="posX" type="int" value="10"/>
+    <property name="posY" type="int" value="11"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

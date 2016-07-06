@@ -33,10 +33,11 @@ class PlayState extends FlxState
 		
 		Reg.levels.set("global", AssetPaths.global__tmx);
 		Reg.levels.set("home1f", AssetPaths.home1f__tmx);
+		Reg.levels.set('market', AssetPaths.market__tmx);
 		
 		loadMap("global");
 		
-		trace(Reg.curent);
+		//trace(Reg.current);
 		
 		player = new Player(posX, posY, AssetPaths.char__png);
 		objectGroup.add(player);
@@ -66,15 +67,17 @@ class PlayState extends FlxState
 	
 	private function loadMap(map:String, ?playerX:Int = 0, ?playerY:Int = 0):Void
 	{
-		Reg.curent = map;
+		Reg.current = map;
 		Reg.level = new TiledLevel(Reg.levels.get(map));
 		
 		backMap.clear();
 		frontMap.clear();
+		doorsGroup.clear();
 		
 		backMap.add(Reg.level.blockedtiles);
 		backMap.add(Reg.level.background);
 		frontMap.add(Reg.level.foreground);
+		doorsGroup.add(Reg.level.doors);
 		
 		if (playerX != 0 && playerY != 0)
 		{
@@ -110,14 +113,12 @@ class PlayState extends FlxState
 			player.moveToNextTile = false;
 		}
 		
-		/*
-		Reg.level.doorTouch(player);
-		*/
+		FlxG.overlap(player, doorsGroup, touchDoor);
 		
 		if (FlxG.keys.anyPressed(["F8"]))
 		{
 			//FlxG.switchState(new MenuState());
-			if (Reg.curent == "global")
+			if (Reg.current == "global")
 			{
 				loadMap("home1f", 8, 8);
 			}
@@ -125,6 +126,15 @@ class PlayState extends FlxState
 			{
 				loadMap("global", 10, 8);
 			}
+		}
+	}
+
+	public function touchDoor(p:Player, d:Door):Void 
+	{
+		if (p.overlaps(d) && d.active && !p.moveToDoor)
+		{
+			p.moveToDoor = true;
+			loadMap(d.map, d.posX, d.posY);
 		}
 	}
 }

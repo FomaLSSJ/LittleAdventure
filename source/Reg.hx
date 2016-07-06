@@ -4,7 +4,7 @@ import flixel.util.FlxSave;
 
 class Reg
 {
-	public static var curent:String = "";
+	public static var current:String = "";
 	public static var levels:Map<String,Dynamic> = new Map();
 	public static var level:TiledLevel = null;
 	public static var scores:Array<Dynamic> = [];

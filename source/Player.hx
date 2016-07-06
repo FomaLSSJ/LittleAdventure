@@ -21,6 +21,7 @@ class Player extends FlxSprite
 	private var moveDirection:MoveDirection;
 	
 	public var moveToNextTile:Bool;
+	public var moveToDoor:Bool;
 	
 	public function new(X:Float=0, Y:Float=0, ?SimpleGraphic:Dynamic):Void
 	{
@@ -96,6 +97,7 @@ class Player extends FlxSprite
 		{
 			moveDirection = Direction;
 			moveToNextTile = true;
+			moveToDoor = false;
 			animation.play(moveDirection + "_WALK");
 		}
 	}

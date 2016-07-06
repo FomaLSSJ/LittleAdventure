@@ -1,7 +1,8 @@
 package;
 
-import flixel.addons.editors.tiled.TiledTileLayer;
 import flixel.addons.editors.tiled.TiledLayer;
+import flixel.addons.editors.tiled.TiledTileLayer;
+import flixel.addons.editors.tiled.TiledObjectLayer;
 import flixel.FlxG;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.FlxObject;
@@ -11,6 +12,8 @@ import haxe.io.Path;
 
 class TiledLevel extends TiledMap
 {
+	public var doors:FlxGroup = new FlxGroup();
+
 	public var background:FlxTilemap;
 	public var foreground:FlxTilemap;
 	public var blockedtiles:FlxTilemap;
@@ -18,6 +21,8 @@ class TiledLevel extends TiledMap
 	private var tileSize:Int;
 	private var mapWidth:Int;
 	private var mapHeight:Int;
+
+	private var door:Door;
 	
 	public function new(Data:Dynamic):Void
 	{
@@ -26,7 +31,7 @@ class TiledLevel extends TiledMap
 		tileSize = tileWidth;
 		mapWidth = width;
 		mapHeight = height;
-		
+
 		for (layer in layers)
 		{
 			// There are two ways to load layer data:
@@ -35,26 +40,38 @@ class TiledLevel extends TiledMap
  
             // 2) If the TMX is saved in base64, then use this:
             // (we shall assume our TMX is base64 format for now)
-            if (layer.type != TiledLayerType.TILE) continue;
-			var layerData:TiledTileLayer = cast layer;
-			
-			var tilesetName:String = layer.properties.get('tileset');
-			var tilesetPath:String = "assets/images/" + tilesetName;
-			var tileGID:Int = getStartGid(tilesetName);
-			
-			var level:FlxTilemap = new FlxTilemap();
-			
-			level.loadMapFromArray(layerData.tileArray, width, height, tilesetPath, tileSize, tileSize, OFF, tileGID, 1, 1);
-			
-			switch (layer.name)
-			{
-				case 'background':
-					background = level;
-				case 'foreground':
-					foreground = level;
-				case 'blockedtiles':
-					blockedtiles = level;
-			}
+            if (layer.type == TiledLayerType.TILE)
+            {
+            	var layerData:TiledTileLayer = cast layer;
+				
+				var tilesetName:String = layer.properties.get('tileset');
+				var tilesetPath:String = "assets/images/" + tilesetName;
+				var tileGID:Int = getStartGid(tilesetName);
+				
+				var level:FlxTilemap = new FlxTilemap();
+				
+				level.loadMapFromArray(layerData.tileArray, width, height, tilesetPath, tileSize, tileSize, OFF, tileGID, 1, 1);
+				
+				switch (layer.name)
+				{
+					case 'background':
+						background = level;
+					case 'foreground':
+						foreground = level;
+					case 'blockedtiles':
+						blockedtiles = level;
+				}
+            }
+            if (layer.type == TiledLayerType.OBJECT)
+            {
+            	var objectData:TiledObjectLayer = cast layer;
+
+				for (object in objectData.objects)
+				{
+					door = new Door(object.x, object.y, object.properties.map, Std.parseInt(object.properties.posX), Std.parseInt(object.properties.posY));
+					doors.add(door);
+				}
+            }
 		}
 	}
 	

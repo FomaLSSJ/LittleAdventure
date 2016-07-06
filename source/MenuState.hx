@@ -28,6 +28,8 @@ class MenuState extends FlxState
 	{
 		super.create();
 		
+		FlxG.log.redirectTraces = true;
+
 		Reg.server = "https://nodejs-api-fomalssj.c9users.io/";
 		
 		statusMessage = new FlxText(10, 10, FlxG.width - 20, "");
