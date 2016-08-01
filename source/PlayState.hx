@@ -11,6 +11,8 @@ import flixel.util.FlxColor;
 
 class PlayState extends FlxState
 {
+	private var request = new Request();
+	
 	private var posX:Int = 10 * 16;
 	private var posY:Int = 8 * 16;
 	
@@ -115,9 +117,11 @@ class PlayState extends FlxState
 		
 		FlxG.overlap(player, doorsGroup, touchDoor);
 		
-		if (FlxG.keys.anyPressed(["F8"]))
+		if (FlxG.keys.justPressed.F8)
 		{
+			request.test();
 			//FlxG.switchState(new MenuState());
+			/*
 			if (Reg.current == "global")
 			{
 				loadMap("home1f", 8, 8);
@@ -126,6 +130,7 @@ class PlayState extends FlxState
 			{
 				loadMap("global", 10, 8);
 			}
+			*/
 		}
 	}
 

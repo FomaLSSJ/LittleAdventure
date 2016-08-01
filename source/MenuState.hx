@@ -10,27 +10,28 @@ import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
 import flixel.util.FlxColor;
-import haxe.Http;
-import haxe.Json;
+
 
 class MenuState extends FlxState
 {
+	public var request:Request;
+	
 	public var statusMessage:FlxText;
 	public var labelName:FlxTextField;
 	public var inputName:FlxInputText;
 	public var labelPass:FlxTextField;
 	public var inputPass:FlxInputText;
 	public var requestButton:FlxButton;
-	public var timerStart:FlxTimer;
-	public var timerElapsed:Float;
 	
 	override public function create():Void
 	{
 		super.create();
 		
-		FlxG.log.redirectTraces = true;
+		//FlxG.log.redirectTraces = true;
 
-		Reg.server = "https://nodejs-api-fomalssj.c9users.io/";
+		Reg.server = "https://nodejs-api-fomalssj.c9users.io";
+		
+		request = new Request();
 		
 		statusMessage = new FlxText(10, 10, FlxG.width - 20, "");
 		
@@ -49,7 +50,7 @@ class MenuState extends FlxState
 		inputPass.y = FlxG.height - 64;
 		inputPass.passwordMode = true;
 		
-		requestButton = new FlxButton(0, 0, "Login", onPlay /*onRequest*/);
+		requestButton = new FlxButton(0, 0, "Login", /*onPlay*/ onRequest);
 		requestButton.x = (FlxG.width - requestButton.width) / 2;
 		requestButton.y = FlxG.height - 32;
 		
@@ -70,15 +71,15 @@ class MenuState extends FlxState
 	{
 		super.update(elapsed);
 		
-		if (timerStart != null)
+		if (request.timerStart != null)
 		{
-			if (timerElapsed <= 0)
+			if (request.timerElapsed <= 0)
 			{
 				statusMessage.text += ".";
-				timerElapsed = 1;
+				request.timerElapsed = 1;
 			}
 			
-			timerElapsed = timerElapsed - timerStart.elapsedTime;
+			request.timerElapsed = request.timerElapsed - request.timerStart.elapsedTime;
 		}
 	}
 	
@@ -87,47 +88,8 @@ class MenuState extends FlxState
 		FlxG.switchState(new PlayState());
 	}
 	
-	private function onRequest():Void
+	private function onRequest()
 	{
-		statusMessage.text = "Request data..." + "\n";
-		
-		var req:Http = new Http(Reg.server + "users/login");
-		req.addParameter("username", inputName.text);
-		req.addParameter("password", inputPass.text);
-		req.request(true);
-		
-		req.onData = function (data)
-		{
-			var object:Dynamic = Json.parse(data);
-			statusMessage.text += "Status: " + object.status + "\n" + "Message: " + object.message + "\n";
-			
-			if (object.status)
-			{
-				Reg.name = object.name;
-				
-				if (object.image)
-				{
-					Reg.image = "images/users/" + object.image;
-				}
-				
-				timerElapsed = 0;
-				timerStart = new FlxTimer().start(3.0, function (t:FlxTimer)
-				{
-					FlxG.switchState(new PlayState());
-				}, 0);
-			}
-		}
-		
-		req.onError = function (data)
-		{
-			statusMessage.text += data + "\n";
-			trace(data);
-		}
-		
-		req.onStatus = function (data)
-		{
-			statusMessage.text += "Status Code: " + data + "\n";
-			trace(data);
-		}
+		request.login(inputName.text, inputPass.text, statusMessage);
 	}
 }
