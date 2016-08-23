@@ -27,18 +27,17 @@ class MenuState extends FlxState
 	{
 		super.create();
 		
+		FlxG.log.redirectTraces = true;
+
 		var myhost:LocalConnection = new LocalConnection();
 		var domain:String = myhost.domain;
 
+		trace(domain);
+
 		if (domain.indexOf("localhost") > -1 || domain.indexOf("foxhound") > -1)
 		{
-			trace(domain);
 			Reg.debugger = true;
 		}
-
-		FlxG.log.redirectTraces = true;
-
-		trace(FlxG.debugger);
 
 		Reg.server = "https://nodejs-api-fomalssj.c9users.io";
 		
