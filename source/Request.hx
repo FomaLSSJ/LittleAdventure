@@ -21,12 +21,13 @@ class Request
 	public function login(login:String, password:String, message:FlxText):Void
 	{
 		message.text = "Request data..." + "\n";
-		
+
 		req = new Http(Reg.server + "/users/login");
+		req.setHeader("content-type", "application/x-www-form-urlencoded");
 		req.addParameter("username", login);
 		req.addParameter("password", password);
 		req.request(true);
-		
+
 		req.onData = function (data)
 		{
 			object = Json.parse(data);
@@ -62,7 +63,7 @@ class Request
 			trace(data);
 		}
 	}
-	
+
 	public function test():Void
 	{
 		req = new Http(Reg.server + "/users/test");

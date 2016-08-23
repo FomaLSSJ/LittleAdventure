@@ -10,7 +10,7 @@ import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
 import flixel.util.FlxColor;
-
+import flash.net.LocalConnection;
 
 class MenuState extends FlxState
 {
@@ -27,7 +27,18 @@ class MenuState extends FlxState
 	{
 		super.create();
 		
-		//FlxG.log.redirectTraces = true;
+		var myhost:LocalConnection = new LocalConnection();
+		var domain:String = myhost.domain;
+
+		if (domain.indexOf("localhost") > -1 || domain.indexOf("foxhound") > -1)
+		{
+			trace(domain);
+			Reg.debugger = true;
+		}
+
+		FlxG.log.redirectTraces = true;
+
+		trace(FlxG.debugger);
 
 		Reg.server = "https://nodejs-api-fomalssj.c9users.io";
 		
@@ -50,7 +61,7 @@ class MenuState extends FlxState
 		inputPass.y = FlxG.height - 64;
 		inputPass.passwordMode = true;
 		
-		requestButton = new FlxButton(0, 0, "Login", /*onPlay*/ onRequest);
+		requestButton = new FlxButton(0, 0, "Login", onRequest);
 		requestButton.x = (FlxG.width - requestButton.width) / 2;
 		requestButton.y = FlxG.height - 32;
 		
@@ -90,6 +101,10 @@ class MenuState extends FlxState
 	
 	private function onRequest()
 	{
+		if (Reg.debugger)
+		{
+			onPlay();
+		}
 		request.login(inputName.text, inputPass.text, statusMessage);
 	}
 }
