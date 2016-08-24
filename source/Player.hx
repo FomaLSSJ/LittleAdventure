@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
 
@@ -90,6 +91,11 @@ class Player extends FlxSprite
 		{
 			moveTo(MoveDirection.RIGHT);
 		}
+		
+		if (FlxG.keys.justPressed.SPACE)
+		{
+			checkCharacters(Reg.characters);
+		}
 	}
 
 	public function moveTo(Direction:MoveDirection):Void
@@ -105,11 +111,35 @@ class Player extends FlxSprite
 		trace(moveDirection);
 	}
 
+	public function collideCharacters(p:Player, c:Character):Void
+	{
+		p.moveToNextTile = false;
+	}
+	
+	public function checkCharacters(characters:FlxTypedGroup<Character>):Void
+	{
+		characters.forEach(function(character:Character):Void
+		{
+			var nextTile:FlxPoint = checkNextTile();
+			trace("Player next tile X:" + nextTile.x + " Y:" + nextTile.y);
+
+			if (character.x == nextTile.x && character.y == nextTile.y)
+			{
+				character.execute(this);
+			}
+		});
+	}
+	
 	public function checkNextTile():FlxPoint
 	{
 		var next:FlxPoint = new FlxPoint();
 		next.x = x;
 		next.y = y;
+		
+		if (moveDirection == null)
+		{
+			return next;
+		}
 
 		switch (moveDirection)
 		{

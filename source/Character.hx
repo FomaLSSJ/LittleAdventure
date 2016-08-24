@@ -7,6 +7,8 @@ class Character extends FlxSprite {
 	private static inline var TILE_SIZE:Int = 16;
 	private static inline var MOVEMENT_SPEED:Int = 1;
 	private static inline var ANIMATION_SPEED:Int = 2;
+	
+	public var name:String = "__NAME__";
 
 	public function new(X:Float=0, Y:Float=0, ?SimpleGraphic:Dynamic):Void
 	{
@@ -39,5 +41,14 @@ class Character extends FlxSprite {
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+	}
+	
+	public function execute(executor:Dynamic):Void
+	{
+		trace(Type.typeof(executor));
+		if (Type.getClassName(Type.getClass(executor)) == "Player")
+		{
+			trace("Player executed script");
+		}
 	}
 }

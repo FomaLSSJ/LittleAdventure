@@ -25,7 +25,7 @@ class MenuState extends FlxState
 	{
 		super.create();
 
-		FlxG.log.redirectTraces = true;
+		//FlxG.log.redirectTraces = true;
 
 		var myhost:LocalConnection = new LocalConnection();
 		var domain:String = myhost.domain;

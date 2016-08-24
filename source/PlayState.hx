@@ -26,11 +26,8 @@ class PlayState extends FlxState
 	private var frontMap:FlxGroup = new FlxGroup();
 	private var objectGroup:FlxGroup = new FlxGroup();
 	private var guiGroup:FlxGroup = new FlxGroup();
-
 	private var doorsGroup:FlxGroup = new FlxGroup();
-	private var characters:FlxGroup = new FlxGroup();
-
-	//private var objects:FlxTypedGroup = new FlxTypedGroup<Character>();
+	private var charactersGroup:FlxGroup = new FlxGroup();
 
 	override public function create():Void
 	{
@@ -63,17 +60,15 @@ class PlayState extends FlxState
 		guiGroup.add(blank);
 
 		var npc:Character = new Character(9 * 16, 13 * 16, AssetPaths.char__png);
-		characters.add(npc);
-
-		//objects.add(npc);
-
-		//trace(objects);
+		npc.name = "NPC Character";
+		Reg.characters.add(npc);
+		charactersGroup.add(Reg.characters);
 
 		add(backMap);
 		add(objectGroup);
 		add(frontMap);
 		add(guiGroup);
-		add(characters);
+		add(charactersGroup);
 	}
 
 	private function loadMap(map:String, ?playerX:Int = 0, ?playerY:Int = 0):Void
@@ -123,32 +118,25 @@ class PlayState extends FlxState
 		{
 			player.moveToNextTile = false;
 		}
-		FlxG.collide(player, characters, touchCharacters);
+		FlxG.collide(player, charactersGroup, touchCharacters);
 
 		FlxG.overlap(player, doorsGroup, touchDoor);
-
-		//FlxG.overlap(player, characters, touchCharacters);
-
+		
 		if (FlxG.keys.justPressed.F8)
 		{
 			Reg.request.test();
 		}
-
-		if (FlxG.keys.justPressed.SPACE)
-		{
-			characters.forEach(checkCharacters);
-		}
 	}
 
-	public function checkCharacters(object:FlxBasic):Void
+	public function checkCharacters(character:Character):Void
 	{
 		var nextTile:FlxPoint = player.checkNextTile();
 		trace("Player next tile X:" + nextTile.x + " Y:" + nextTile.y);
 
-		// if (object.x == nextTile.x && object.y == nextTile.y)
-		// {
-		// 	trace("Object collide");
-		// }
+		if (character.x == nextTile.x && character.y == nextTile.y)
+		{
+			trace("Object collide");
+		}
 	}
 
 	public function touchDoor(p:Player, d:Door):Void
@@ -157,16 +145,6 @@ class PlayState extends FlxState
 		{
 			p.moveToDoor = true;
 			loadMap(d.map, d.posX, d.posY);
-		}
-	}
-
-	public function touchCharacters(p:Player, c:Character):Void
-	{
-		p.moveToNextTile = false;
-
-		if (FlxG.keys.anyPressed(["SPACE", "ENTER"]))
-		{
-			trace('kek');
 		}
 	}
 }

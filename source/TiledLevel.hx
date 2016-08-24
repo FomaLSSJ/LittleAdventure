@@ -12,7 +12,7 @@ import haxe.io.Path;
 
 class TiledLevel extends TiledMap
 {
-	public var doors:FlxGroup = new FlxGroup();
+	public var doors:FlxTypedGroup<Door> = new FlxTypedGroup<Door>();
 
 	public var background:FlxTilemap;
 	public var foreground:FlxTilemap;
@@ -21,8 +21,6 @@ class TiledLevel extends TiledMap
 	private var tileSize:Int;
 	private var mapWidth:Int;
 	private var mapHeight:Int;
-
-	private var door:Door;
 	
 	public function new(Data:Dynamic):Void
 	{
@@ -68,7 +66,7 @@ class TiledLevel extends TiledMap
 
 				for (object in objectData.objects)
 				{
-					door = new Door(object.x, object.y, object.properties.map, Std.parseInt(object.properties.posX), Std.parseInt(object.properties.posY));
+					var door:Door = new Door(object.x, object.y, object.properties.map, Std.parseInt(object.properties.posX), Std.parseInt(object.properties.posY));
 					doors.add(door);
 				}
             }
