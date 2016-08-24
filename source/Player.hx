@@ -105,13 +105,13 @@ class Player extends FlxSprite
 		trace(moveDirection);
 	}
 
-	public function checkNextTile(Direction:MoveDirection):FlxPoint
+	public function checkNextTile():FlxPoint
 	{
 		var next:FlxPoint = new FlxPoint();
 		next.x = x;
 		next.y = y;
 
-		switch (Direction)
+		switch (moveDirection)
 		{
 			case UP:
 				next.y -= TILE_SIZE;

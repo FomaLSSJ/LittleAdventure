@@ -30,6 +30,8 @@ class PlayState extends FlxState
 	private var doorsGroup:FlxGroup = new FlxGroup();
 	private var characters:FlxGroup = new FlxGroup();
 
+	//private var objects:FlxTypedGroup = new FlxTypedGroup<Character>();
+
 	override public function create():Void
 	{
 		super.create();
@@ -39,8 +41,6 @@ class PlayState extends FlxState
 		Reg.levels.set('market', AssetPaths.market__tmx);
 
 		loadMap("global");
-
-		//trace(Reg.current);
 
 		player = new Player(posX, posY, AssetPaths.char__png);
 		objectGroup.add(player);
@@ -64,6 +64,10 @@ class PlayState extends FlxState
 
 		var npc:Character = new Character(9 * 16, 13 * 16, AssetPaths.char__png);
 		characters.add(npc);
+
+		//objects.add(npc);
+
+		//trace(objects);
 
 		add(backMap);
 		add(objectGroup);
@@ -130,7 +134,7 @@ class PlayState extends FlxState
 			Reg.request.test();
 		}
 
-		if (FlxG.keys.anyPressed(["SPACE", "ENTER"]))
+		if (FlxG.keys.justPressed.SPACE)
 		{
 			characters.forEach(checkCharacters);
 		}
@@ -138,8 +142,13 @@ class PlayState extends FlxState
 
 	public function checkCharacters(object:FlxBasic):Void
 	{
-		//var point:FlxPoint = player.checkNextTile();
-		trace(object);
+		var nextTile:FlxPoint = player.checkNextTile();
+		trace("Player next tile X:" + nextTile.x + " Y:" + nextTile.y);
+
+		// if (object.x == nextTile.x && object.y == nextTile.y)
+		// {
+		// 	trace("Object collide");
+		// }
 	}
 
 	public function touchDoor(p:Player, d:Door):Void
