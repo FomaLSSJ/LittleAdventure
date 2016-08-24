@@ -14,19 +14,17 @@ import flash.net.LocalConnection;
 
 class MenuState extends FlxState
 {
-	public var request:Request;
-	
 	public var statusMessage:FlxText;
 	public var labelName:FlxTextField;
 	public var inputName:FlxInputText;
 	public var labelPass:FlxTextField;
 	public var inputPass:FlxInputText;
 	public var requestButton:FlxButton;
-	
+
 	override public function create():Void
 	{
 		super.create();
-		
+
 		FlxG.log.redirectTraces = true;
 
 		var myhost:LocalConnection = new LocalConnection();
@@ -40,18 +38,16 @@ class MenuState extends FlxState
 		}
 
 		Reg.server = "https://nodejs-api-fomalssj.c9users.io";
-		
-		request = new Request();
-		
+
 		statusMessage = new FlxText(10, 10, FlxG.width - 20, "");
-		
+
 		labelName = new FlxTextField(0, 0, 64, "Username");
 		labelName.x = (FlxG.width - labelName.width) / 10;
 		labelName.y = FlxG.height - 64;
 		inputName = new FlxInputText(0, 0, 128);
 		inputName.x = labelName.x + labelName.width + 24;
 		inputName.y = FlxG.height - 64;
-		
+
 		labelPass = new FlxTextField(0, 0, 64, "Password");
 		labelPass.x = inputName.x + inputName.width + 64;
 		labelPass.y = FlxG.height - 64;
@@ -59,11 +55,11 @@ class MenuState extends FlxState
 		inputPass.x = labelPass.x + labelPass.width + 24;
 		inputPass.y = FlxG.height - 64;
 		inputPass.passwordMode = true;
-		
+
 		requestButton = new FlxButton(0, 0, "Login", onRequest);
 		requestButton.x = (FlxG.width - requestButton.width) / 2;
 		requestButton.y = FlxG.height - 32;
-		
+
 		add(labelName);
 		add(inputName);
 		add(labelPass);
@@ -80,30 +76,30 @@ class MenuState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		
-		if (request.timerStart != null)
+
+		if (Reg.request.timerStart != null)
 		{
-			if (request.timerElapsed <= 0)
+			if (Reg.request.timerElapsed <= 0)
 			{
 				statusMessage.text += ".";
-				request.timerElapsed = 1;
+				Reg.request.timerElapsed = 1;
 			}
-			
-			request.timerElapsed = request.timerElapsed - request.timerStart.elapsedTime;
+
+			Reg.request.timerElapsed = Reg.request.timerElapsed - Reg.request.timerStart.elapsedTime;
 		}
 	}
-	
+
 	private function onPlay():Void
 	{
 		FlxG.switchState(new PlayState());
 	}
-	
+
 	private function onRequest()
 	{
 		if (Reg.debugger)
 		{
 			onPlay();
 		}
-		request.login(inputName.text, inputPass.text, statusMessage);
+		Reg.request.login(inputName.text, inputPass.text, statusMessage);
 	}
 }
