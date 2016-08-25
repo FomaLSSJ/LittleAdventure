@@ -4,10 +4,8 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
-import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
-import flixel.util.FlxColor;
 import flixel.FlxBasic;
 import flixel.math.FlxPoint;
 
@@ -16,10 +14,8 @@ class PlayState extends FlxState
 	private var posX:Int = 10 * 16;
 	private var posY:Int = 8 * 16;
 
-	private var blank:FlxSprite;
 	private var image:ImageLoad;
 	private var player:Player;
-	private var status:FlxText;
 	private var username:String;
 
 	private var backMap:FlxGroup = new FlxGroup();
@@ -28,6 +24,8 @@ class PlayState extends FlxState
 	private var guiGroup:FlxGroup = new FlxGroup();
 	private var doorsGroup:FlxGroup = new FlxGroup();
 	private var charactersGroup:FlxGroup = new FlxGroup();
+
+	private var gui:GUI = new GUI();
 
 	override public function create():Void
 	{
@@ -50,25 +48,19 @@ class PlayState extends FlxState
 		});
 		*/
 
-		status = new FlxText(10, 10, 128, Reg.name);
-		status.scrollFactor.set(0, 0);
-		guiGroup.add(status);
-
-		blank = new FlxSprite();
-		blank.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		blank.scrollFactor.set(0, 0);
-		guiGroup.add(blank);
-
 		var npc:Character = new Character(9 * 16, 13 * 16, AssetPaths.char__png);
 		npc.name = "NPC Character";
 		Reg.characters.add(npc);
 		charactersGroup.add(Reg.characters);
 
+		gui.init();
+		guiGroup.add(gui);
+
 		add(backMap);
 		add(objectGroup);
+		add(charactersGroup);
 		add(frontMap);
 		add(guiGroup);
-		add(charactersGroup);
 	}
 
 	private function loadMap(map:String, ?playerX:Int = 0, ?playerY:Int = 0):Void
@@ -109,33 +101,19 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 
-		if (blank.visible && player != null)
-		{
-			blank.visible = false;
-		}
+		FlxG.overlap(player, doorsGroup, touchDoor);
 
 		if (Reg.level.collide(player))
 		{
 			player.moveToNextTile = false;
 		}
-		FlxG.collide(player, charactersGroup, touchCharacters);
+		FlxG.collide(player, charactersGroup, player.collideCharacters);
 
-		FlxG.overlap(player, doorsGroup, touchDoor);
-		
+
 		if (FlxG.keys.justPressed.F8)
 		{
-			Reg.request.test();
-		}
-	}
-
-	public function checkCharacters(character:Character):Void
-	{
-		var nextTile:FlxPoint = player.checkNextTile();
-		trace("Player next tile X:" + nextTile.x + " Y:" + nextTile.y);
-
-		if (character.x == nextTile.x && character.y == nextTile.y)
-		{
-			trace("Object collide");
+			//Reg.request.test();
+			gui.toggleDialog();
 		}
 	}
 

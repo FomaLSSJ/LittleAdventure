@@ -5,14 +5,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
-
-enum MoveDirection
-{
-	UP;
-	DOWN;
-	LEFT;
-	RIGHT;
-}
+import flixel.FlxObject;
 
 class Player extends FlxSprite
 {
@@ -20,14 +13,14 @@ class Player extends FlxSprite
 	private static inline var MOVEMENT_SPEED:Int = 1;
 	private static inline var ANIMATION_SPEED:Int = 2;
 
-	private var moveDirection:MoveDirection;
-
 	public var moveToNextTile:Bool;
 	public var moveToDoor:Bool;
 
 	public function new(X:Float=0, Y:Float=0, ?SimpleGraphic:Dynamic):Void
 	{
 		super(X, Y);
+
+		this.facing = FlxObject.DOWN;
 
 		if (SimpleGraphic)
 		{
@@ -57,15 +50,15 @@ class Player extends FlxSprite
 
 		if (moveToNextTile)
 		{
-			switch (moveDirection)
+			switch (this.facing)
 			{
-				case UP:
+				case FlxObject.UP:
 					y -= MOVEMENT_SPEED;
-				case DOWN:
+				case FlxObject.DOWN:
 					y += MOVEMENT_SPEED;
-				case LEFT:
+				case FlxObject.LEFT:
 					x -= MOVEMENT_SPEED;
-				case RIGHT:
+				case FlxObject.RIGHT:
 					x += MOVEMENT_SPEED;
 			}
 		}
@@ -77,45 +70,56 @@ class Player extends FlxSprite
 
 		if (FlxG.keys.anyPressed(["UP", "W"]))
 		{
-			moveTo(MoveDirection.UP);
+			moveTo(FlxObject.UP);
 		}
 		else if (FlxG.keys.anyPressed(["DOWN","S"]))
 		{
-			moveTo(MoveDirection.DOWN);
+			moveTo(FlxObject.DOWN);
 		}
 		else if (FlxG.keys.anyPressed(["LEFT", "A"]))
 		{
-			moveTo(MoveDirection.LEFT);
+			moveTo(FlxObject.LEFT);
 		}
 		else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
 		{
-			moveTo(MoveDirection.RIGHT);
+			moveTo(FlxObject.RIGHT);
 		}
-		
+
 		if (FlxG.keys.justPressed.SPACE)
 		{
 			checkCharacters(Reg.characters);
 		}
 	}
 
-	public function moveTo(Direction:MoveDirection):Void
+	public function moveTo(direction:Int):Void
 	{
 		if (!moveToNextTile)
 		{
-			moveDirection = Direction;
+			trace(direction);
+			this.facing = direction;
 			moveToNextTile = true;
 			moveToDoor = false;
-			animation.play(moveDirection + "_WALK");
-		}
+			switch (this.facing)
+			{
+				case FlxObject.UP:
+					animation.play("UP_WALK");
+				case FlxObject.DOWN:
+					animation.play("DOWN_WALK");
+				case FlxObject.LEFT:
+					animation.play("LEFT_WALK");
+				case FlxObject.RIGHT:
+					animation.play("RIGHT_WALK");
+			}
 
-		trace(moveDirection);
+			//animation.play(direction + "_WALK");
+		}
 	}
 
 	public function collideCharacters(p:Player, c:Character):Void
 	{
 		p.moveToNextTile = false;
 	}
-	
+
 	public function checkCharacters(characters:FlxTypedGroup<Character>):Void
 	{
 		characters.forEach(function(character:Character):Void
@@ -129,30 +133,30 @@ class Player extends FlxSprite
 			}
 		});
 	}
-	
+
 	public function checkNextTile():FlxPoint
 	{
 		var next:FlxPoint = new FlxPoint();
 		next.x = x;
 		next.y = y;
-		
-		if (moveDirection == null)
-		{
-			return next;
-		}
 
-		switch (moveDirection)
+		switch (this.facing)
 		{
-			case UP:
+			case FlxObject.UP:
 				next.y -= TILE_SIZE;
-			case DOWN:
+			case FlxObject.DOWN:
 				next.y += TILE_SIZE;
-			case LEFT:
+			case FlxObject.LEFT:
 				next.x -= TILE_SIZE;
-			case RIGHT:
+			case FlxObject.RIGHT:
 				next.x += TILE_SIZE;
 		}
 
 		return next;
+	}
+
+	public function getDirection():Int
+	{
+		return this.facing;
 	}
 }

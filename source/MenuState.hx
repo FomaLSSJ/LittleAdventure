@@ -12,6 +12,8 @@ import flixel.util.FlxTimer;
 import flixel.util.FlxColor;
 import flash.net.LocalConnection;
 
+import com.newgrounds.components.FlashAd;
+
 class MenuState extends FlxState
 {
 	public var statusMessage:FlxText;
@@ -21,11 +23,17 @@ class MenuState extends FlxState
 	public var inputPass:FlxInputText;
 	public var requestButton:FlxButton;
 
+	private var flashAd:FlashAd = new FlashAd();
+
 	override public function create():Void
 	{
 		super.create();
 
-		//FlxG.log.redirectTraces = true;
+		FlxG.log.redirectTraces = true;
+
+		flashAd.x = FlxG.width / 2 - flashAd.width / 2;
+		flashAd.y = FlxG.height / 2 - flashAd.height / 2;
+		FlxG.stage.addChild(flashAd);
 
 		var myhost:LocalConnection = new LocalConnection();
 		var domain:String = myhost.domain;
@@ -96,6 +104,8 @@ class MenuState extends FlxState
 
 	private function onRequest()
 	{
+		FlxG.stage.removeChild(flashAd);
+
 		if (Reg.debugger)
 		{
 			onPlay();
