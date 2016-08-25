@@ -50,6 +50,10 @@ class PlayState extends FlxState
 
 		var npc:Character = new Character(9 * 16, 13 * 16, AssetPaths.char__png);
 		npc.name = "NPC Character";
+		npc..dialog = ["Richard: Hey how are you today!",
+			"You: I'm ok, thank you.",
+			"Richard: Do you want some candy?",
+			"You: No."];
 		Reg.characters.add(npc);
 		charactersGroup.add(Reg.characters);
 

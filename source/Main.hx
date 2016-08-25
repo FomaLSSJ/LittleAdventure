@@ -26,8 +26,8 @@ class Main extends Sprite
 	{
 		Lib.current.addChild(new Main());
 
-		//API.addEventListener(APIEvent.API_CONNECTED, onAPIConnected);
-		//API.connect(Lib.current.root, "", "");
+		API.addEventListener(APIEvent.API_CONNECTED, onAPIConnected);
+		API.connect(Lib.current.root, "44344:Euv10Hbf", "arbwJNTwUicycTwZYcNNU64osQpchJLP");
 	}
 
 	public function new():Void

@@ -12,6 +12,8 @@ class Character extends FlxSprite {
 	private var direction:Int = FlxObject.DOWN;
 
 	public var name:String = "__NAME__";
+	public var dialogIndex:Int = 0;
+	public var dialog:Array<String> = new Array<String>();
 
 	public function new(X:Float=0, Y:Float=0, ?SimpleGraphic:Dynamic):Void
 	{
@@ -50,7 +52,6 @@ class Character extends FlxSprite {
 	{
 		setLook(executor.getDirection());
 
-		trace(Type.typeof(executor));
 		if (Type.getClassName(Type.getClass(executor)) == "Player")
 		{
 			trace("Player executed script");
@@ -70,5 +71,10 @@ class Character extends FlxSprite {
 			case FlxObject.LEFT:
 				animation.play("RIGHT_WALK");
 		}
+	}
+	
+	public function startDialog():Void
+	{
+		//null
 	}
 }

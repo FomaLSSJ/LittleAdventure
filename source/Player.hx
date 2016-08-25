@@ -15,6 +15,8 @@ class Player extends FlxSprite
 
 	public var moveToNextTile:Bool;
 	public var moveToDoor:Bool;
+	
+	public var executeCharacter:Character;
 
 	public function new(X:Float=0, Y:Float=0, ?SimpleGraphic:Dynamic):Void
 	{
@@ -95,7 +97,6 @@ class Player extends FlxSprite
 	{
 		if (!moveToNextTile)
 		{
-			trace(direction);
 			this.facing = direction;
 			moveToNextTile = true;
 			moveToDoor = false;
@@ -110,8 +111,6 @@ class Player extends FlxSprite
 				case FlxObject.RIGHT:
 					animation.play("RIGHT_WALK");
 			}
-
-			//animation.play(direction + "_WALK");
 		}
 	}
 
@@ -125,7 +124,6 @@ class Player extends FlxSprite
 		characters.forEach(function(character:Character):Void
 		{
 			var nextTile:FlxPoint = checkNextTile();
-			trace("Player next tile X:" + nextTile.x + " Y:" + nextTile.y);
 
 			if (character.x == nextTile.x && character.y == nextTile.y)
 			{
