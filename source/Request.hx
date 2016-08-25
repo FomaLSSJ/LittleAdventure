@@ -12,14 +12,18 @@ class Request
 	public var object:Dynamic;
 	public var timerStart:FlxTimer;
 	public var timerElapsed:Float;
-	
+
+	private var callback:Void->Void = null;
+
 	public function new():Void
 	{
 		//null
 	}
-	
-	public function login(login:String, password:String, message:FlxText):Void
+
+	public function login(login:String, password:String, message:FlxText, ?Callback:Void->Void):Void
 	{
+		callback = Callback;
+
 		message.text = "Request data..." + "\n";
 
 		req = new Http(Reg.server + "/users/login");
@@ -33,30 +37,31 @@ class Request
 			object = Json.parse(data);
 			trace(object.status);
 			message.text += "Status: " + object.status + "\n" + "Message: " + object.message + "\n";
-			
+
 			if (object.status)
 			{
 				Reg.name = object.name;
-				
+
 				if (object.image)
 				{
 					Reg.image = "images/users/" + object.image;
 				}
-				
+
 				timerElapsed = 0;
 				timerStart = new FlxTimer().start(3.0, function (t:FlxTimer)
 				{
 					FlxG.switchState(new PlayState());
+					callback();
 				}, 0);
 			}
 		}
-		
+
 		req.onError = function (data)
 		{
 			message.text += data + "\n";
 			trace(data);
 		}
-		
+
 		req.onStatus = function (data)
 		{
 			message.text += "Status Code: " + data + "\n";
@@ -68,7 +73,7 @@ class Request
 	{
 		req = new Http(Reg.server + "/users/test");
 		req.request(false);
-		
+
 		req.onData = function (data)
 		{
 			object = Json.parse(data);

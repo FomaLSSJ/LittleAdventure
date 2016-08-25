@@ -27,12 +27,13 @@ class GUI extends FlxSpriteGroup
     dialog = new FlxSprite();
     dialog.makeGraphic(FlxG.width, 120, 0xFF333333);
     dialog.scrollFactor.x = dialog.scrollFactor.y = 0;
-    dialog.alpha = .75;
-    dialog.visible = true;
+    dialog.alpha = .65;
+    dialog.visible = false;
     add(dialog);
 
     status = new FlxText(10, 10, 128, Reg.name);
 		status.scrollFactor.set(0, 0);
+    status.visible = false;
 		add(status);
 
     blank = new FlxSprite();

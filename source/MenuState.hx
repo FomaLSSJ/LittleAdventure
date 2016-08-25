@@ -99,17 +99,18 @@ class MenuState extends FlxState
 
 	private function onPlay():Void
 	{
+		FlxG.stage.removeChild(flashAd);
 		FlxG.switchState(new PlayState());
 	}
 
 	private function onRequest()
 	{
-		FlxG.stage.removeChild(flashAd);
-
 		if (Reg.debugger)
 		{
 			onPlay();
 		}
-		Reg.request.login(inputName.text, inputPass.text, statusMessage);
+		Reg.request.login(inputName.text, inputPass.text, statusMessage, function (){
+			FlxG.stage.removeChild(flashAd);
+		});
 	}
 }
