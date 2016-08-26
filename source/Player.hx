@@ -13,9 +13,11 @@ class Player extends FlxSprite
 	private static inline var MOVEMENT_SPEED:Int = 1;
 	private static inline var ANIMATION_SPEED:Int = 2;
 
+	private var isDialog:Bool;
+
 	public var moveToNextTile:Bool;
 	public var moveToDoor:Bool;
-	
+
 	public var executeCharacter:Character;
 
 	public function new(X:Float=0, Y:Float=0, ?SimpleGraphic:Dynamic):Void
@@ -50,6 +52,48 @@ class Player extends FlxSprite
 	{
 		super.update(elapsed);
 
+		if (!isDialog)
+		{
+			movement();
+		}
+
+		use();
+	}
+
+	private function use():Void
+	{
+		if (FlxG.keys.justPressed.SPACE)
+		{
+			if (!isDialog)
+			{
+				checkCharacters(Reg.characters);
+			}
+			else
+			{
+				dialog();
+			}
+		}
+	}
+
+	private function dialog():Void
+	{
+		if (executeCharacter.dialogIndex >= executeCharacter.dialog.length)
+		{
+			Reg.gui.toggleDialog();
+			isDialog = false;
+
+			executeCharacter.dialogIndex = 0;
+			return;
+		}
+		else
+		{
+			Reg.gui.setText(executeCharacter.dialog[executeCharacter.dialogIndex]);
+		}
+		executeCharacter.dialogIndex++;
+	}
+
+	private function movement():Void
+	{
 		if (moveToNextTile)
 		{
 			switch (this.facing)
@@ -85,11 +129,6 @@ class Player extends FlxSprite
 		else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
 		{
 			moveTo(FlxObject.RIGHT);
-		}
-
-		if (FlxG.keys.justPressed.SPACE)
-		{
-			checkCharacters(Reg.characters);
 		}
 	}
 
@@ -127,7 +166,12 @@ class Player extends FlxSprite
 
 			if (character.x == nextTile.x && character.y == nextTile.y)
 			{
-				character.execute(this);
+				executeCharacter = character;
+				executeCharacter.execute(this);
+
+				isDialog = true;
+				Reg.gui.toggleDialog();
+				dialog();
 			}
 		});
 	}

@@ -28,4 +28,6 @@ class Reg
 	public static var request:Request = new Request();
 	public static var name:String = "__NAME__";
 	public static var image:String = "images/char.png";
+
+	public static var gui:GUI = new GUI();
 }

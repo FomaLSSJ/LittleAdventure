@@ -25,8 +25,6 @@ class PlayState extends FlxState
 	private var doorsGroup:FlxGroup = new FlxGroup();
 	private var charactersGroup:FlxGroup = new FlxGroup();
 
-	private var gui:GUI = new GUI();
-
 	override public function create():Void
 	{
 		super.create();
@@ -50,15 +48,15 @@ class PlayState extends FlxState
 
 		var npc:Character = new Character(9 * 16, 13 * 16, AssetPaths.char__png);
 		npc.name = "NPC Character";
-		npc..dialog = ["Richard: Hey how are you today!",
+		npc.dialog = ["Richard: Hey how are you today!",
 			"You: I'm ok, thank you.",
 			"Richard: Do you want some candy?",
 			"You: No."];
 		Reg.characters.add(npc);
 		charactersGroup.add(Reg.characters);
 
-		gui.init();
-		guiGroup.add(gui);
+		Reg.gui.init();
+		guiGroup.add(Reg.gui);
 
 		add(backMap);
 		add(objectGroup);
@@ -117,7 +115,7 @@ class PlayState extends FlxState
 		if (FlxG.keys.justPressed.F8)
 		{
 			//Reg.request.test();
-			gui.toggleDialog();
+			Reg.gui.toggleDialog();
 		}
 	}
 

@@ -5,15 +5,14 @@ import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
-import flixel.group.FlxSpriteGroup;
 
-class GUI extends FlxSpriteGroup
+class GUI extends FlxGroup
 {
 	private var dialogBg:FlxSprite;
 	private var dialogText:FlxText;
 	private var blank:FlxSprite;
 	private var status:FlxText;
-	
+
 	private var dialog:FlxGroup = new FlxGroup();
 
 	public function new():Void
@@ -36,8 +35,6 @@ class GUI extends FlxSpriteGroup
 
 		dialogText = new FlxText(10, 10, FlxG.width - 20, "__TEXT__");
 		dialog.add(dialogText);
-		
-		dialog.visible = false;
 
 		status = new FlxText(10, 10, 128, Reg.name);
 		status.scrollFactor.set(0, 0);
@@ -49,10 +46,18 @@ class GUI extends FlxSpriteGroup
 		blank.scrollFactor.set(0, 0);
 		blank.visible = false;
 		add(blank);
+
+		dialog.visible = false;
+		add(dialog);
 	}
 
 	public function toggleDialog():Void
 	{
-		dialogBg.visible = !dialog.visible;
+		dialog.visible = !dialog.visible;
+	}
+
+	public function setText(text:String):Void
+	{
+		dialogText.text = text;
 	}
 }
