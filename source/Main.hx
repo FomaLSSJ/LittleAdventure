@@ -26,7 +26,6 @@ class Main extends Sprite
 	{
 		Lib.current.addChild(new Main());
 
-		API.addEventListener(APIEvent.API_CONNECTED, onAPIConnected);
 		API.connect(Lib.current.root, "44344:Euv10Hbf", "arbwJNTwUicycTwZYcNNU64osQpchJLP");
 	}
 
@@ -69,17 +68,5 @@ class Main extends Sprite
 		}
 
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
-	}
-
-	private static function onAPIConnected(event:APIEvent):Void
-	{
-		if (event.success)
-		{
-			trace("The API is connected and ready to use!");
-		}
-		else
-		{
-			trace("Error connecting to the API: " + event.error);
-		}
 	}
 }

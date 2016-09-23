@@ -29,6 +29,17 @@ class PlayState extends FlxState
 	{
 		super.create();
 
+		var inv:Inventory = new Inventory();
+		var letter:Item = new Item("Letter", AssetPaths.letter__png);
+		var pencil:Item = new Item("Pencil", AssetPaths.pencil__png);
+		var diskette:Item = new Item("Diskette", AssetPaths.diskette__png);
+		inv.addItem(letter);
+		inv.addItem(pencil);
+		inv.addItem(diskette);
+		trace(inv.getItemsName());
+		inv.removeItem("Pencil");
+		trace(inv.getItemsName());
+
 		Reg.levels.set("global", AssetPaths.global__tmx);
 		Reg.levels.set("home1f", AssetPaths.home1f__tmx);
 		Reg.levels.set('market', AssetPaths.market__tmx);
@@ -46,12 +57,13 @@ class PlayState extends FlxState
 		});
 		*/
 
-		var npc:Character = new Character(9 * 16, 13 * 16, AssetPaths.char__png);
+		var npc:Character = new Character(9 * 16, 13 * 16, AssetPaths.merchant__png);
 		npc.name = "NPC Character";
 		npc.dialog = ["Richard: Hey how are you today!",
 			"You: I'm ok, thank you.",
 			"Richard: Do you want some candy?",
-			"You: No."];
+			"You: No.",
+			"You: Kek"];
 		Reg.characters.add(npc);
 		charactersGroup.add(Reg.characters);
 

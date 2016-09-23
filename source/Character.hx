@@ -72,7 +72,7 @@ class Character extends FlxSprite {
 				animation.play("RIGHT_WALK");
 		}
 	}
-	
+
 	public function startDialog():Void
 	{
 		//null

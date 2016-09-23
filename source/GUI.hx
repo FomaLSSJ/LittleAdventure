@@ -28,7 +28,7 @@ class GUI extends FlxGroup
 	public function init():Void
 	{
 		dialogBg = new FlxSprite();
-		dialogBg.makeGraphic(FlxG.width, 120, 0xFF333333);
+		dialogBg.makeGraphic(FlxG.width, 60, 0xFF333333);
 		dialogBg.scrollFactor.x = dialogBg.scrollFactor.y = 0;
 		dialogBg.alpha = .65;
 		dialog.add(dialogBg);

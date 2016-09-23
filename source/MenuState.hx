@@ -29,7 +29,7 @@ class MenuState extends FlxState
 	{
 		super.create();
 
-		FlxG.log.redirectTraces = true;
+		//FlxG.log.redirectTraces = true;
 
 		flashAd.x = FlxG.width / 2 - flashAd.width / 2;
 		flashAd.y = FlxG.height / 2 - flashAd.height / 2;
@@ -108,6 +108,7 @@ class MenuState extends FlxState
 		if (Reg.debugger)
 		{
 			onPlay();
+			return;
 		}
 		Reg.request.login(inputName.text, inputPass.text, statusMessage, function (){
 			FlxG.stage.removeChild(flashAd);
