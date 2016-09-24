@@ -1,5 +1,5 @@
 # Build and Release Folders
-#export/
+export/flash/bin/
 
 # Other files and folders
 .settings/
