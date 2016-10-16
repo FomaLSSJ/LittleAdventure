@@ -9,9 +9,20 @@ class Inventory extends FlxTypedGroup<Item>
 		super(MaxSize);
 	}
 	
-	public function addItem(item:Item):Void
+	public function addItem(item:Dynamic):Void
 	{
-		this.add(item);
+		var append:Item = null;
+		
+		if (Type.getClassName(Type.getClass(item)) == "String")
+		{
+			append = Reg.itemsList.get(item);
+		}
+		else
+		{
+			append = item;
+		}
+		
+		this.add(append);
 		return;
 	}
 	
@@ -49,19 +60,38 @@ class Inventory extends FlxTypedGroup<Item>
 	{
 		var names:Array<String> = new Array<String>();
 		
-		this.forEach(function (item:Item):Void
+		if (this.length > 0)
 		{
-			names.push(item.name);
-		});
-		
-		return names.join(", ");
+			this.forEach(function (item:Item):Void
+			{
+				names.push(item.name);
+			});
+			
+			return names.join(", ");
+		}
+		else
+		{
+			return "None";
+		}
 	}
 	
-	public function removeItem(name:String):Void
+	public function removeItem(name:Dynamic):Void
 	{
+		var found:String = "";
+		
+		if (Type.getClassName(Type.getClass(name)) == "Item")
+		{
+			found = name.name;
+		}
+		else
+		{
+			var item = Reg.itemsList.get(name);
+			found = (item != null) ? item.name : name;
+		}
+		
 		this.forEach(function (item:Item):Void
 		{
-			if (item.name == name)
+			if (item.name == found)
 			{
 				this.remove(item);
 				return;

@@ -13,7 +13,7 @@ class Character extends FlxSprite {
 
 	public var name:String = "__NAME__";
 	public var dialogIndex:Int = 0;
-	public var dialog:Array<String> = new Array<String>();
+	public var dialog:Array<Map<String,Dynamic>> = new Array<Map<String,Dynamic>>();
 
 	public function new(X:Float=0, Y:Float=0, ?SimpleGraphic:Dynamic):Void
 	{

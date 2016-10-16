@@ -83,15 +83,32 @@ class Player extends FlxSprite
 			isDialog = false;
 
 			executeCharacter.dialogIndex = 0;
+			trace(Reg.inv.getItemsName());
 			return;
 		}
 		else
 		{
-			Reg.gui.setText(executeCharacter.dialog[executeCharacter.dialogIndex]);
+			var stack:Map<String,Dynamic> = executeCharacter.dialog[executeCharacter.dialogIndex];
+			
+			trace("Index:" + executeCharacter.dialogIndex);
+			
+			switch (stack.get("key"))
+			{
+				case "string":
+					Reg.gui.setText(stack.get("data"));
+					executeCharacter.dialogIndex++;
+				case "function":
+					var data = stack.get("data");
+					
+					Reflect.callMethod(Reg.helper, Reflect.field(Reg.helper, data.field), data.args);
+					executeCharacter.dialogIndex++;
+					dialog();
+				default:
+					//null
+			}
 		}
-		executeCharacter.dialogIndex++;
 	}
-
+	
 	private function movement():Void
 	{
 		if (moveToNextTile)

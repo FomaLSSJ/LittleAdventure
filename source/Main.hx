@@ -7,8 +7,9 @@ import flash.events.Event;
 import flash.Lib;
 import flixel.FlxGame;
 import flixel.FlxState;
-
+#if flash
 import com.newgrounds.*;
+#end
 
 class Main extends Sprite
 {
@@ -26,7 +27,9 @@ class Main extends Sprite
 	{
 		Lib.current.addChild(new Main());
 
+		#if flash
 		API.connect(Lib.current.root, "44344:Euv10Hbf", "arbwJNTwUicycTwZYcNNU64osQpchJLP");
+		#end
 	}
 
 	public function new():Void

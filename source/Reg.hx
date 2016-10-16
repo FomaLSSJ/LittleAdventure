@@ -3,14 +3,6 @@ package;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxSave;
 
-enum Direction
-{
-	UP;
-	DOWN;
-	LEFT;
-	RIGHT;
-}
-
 class Reg
 {
 	public static var debugger:Bool = false;
@@ -30,4 +22,8 @@ class Reg
 	public static var image:String = "images/char.png";
 
 	public static var gui:GUI = new GUI();
+	
+	public static var inv:Inventory = new Inventory();
+	public static var itemsList:Map<String,Item> = new Map<String,Item>();
+	public static var helper:Helper = new Helper();
 }

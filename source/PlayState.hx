@@ -8,6 +8,7 @@ import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
 import flixel.FlxBasic;
 import flixel.math.FlxPoint;
+import haxe.rtti.Rtti;
 
 class PlayState extends FlxState
 {
@@ -24,22 +25,17 @@ class PlayState extends FlxState
 	private var guiGroup:FlxGroup = new FlxGroup();
 	private var doorsGroup:FlxGroup = new FlxGroup();
 	private var charactersGroup:FlxGroup = new FlxGroup();
+	
+	private var testing:Bool = false;
 
 	override public function create():Void
 	{
 		super.create();
-
-		var inv:Inventory = new Inventory();
-		var letter:Item = new Item("Letter", AssetPaths.letter__png);
-		var pencil:Item = new Item("Pencil", AssetPaths.pencil__png);
-		var diskette:Item = new Item("Diskette", AssetPaths.diskette__png);
-		inv.addItem(letter);
-		inv.addItem(pencil);
-		inv.addItem(diskette);
-		trace(inv.getItemsName());
-		inv.removeItem("Pencil");
-		trace(inv.getItemsName());
-
+		
+		Reg.itemsList.set("letter", new Item("Letter", AssetPaths.letter__png));
+		Reg.itemsList.set("pencil", new Item("Pencil", AssetPaths.pencil__png));
+		Reg.itemsList.set("diskette", new Item("Diskette", AssetPaths.diskette__png));
+		
 		Reg.levels.set("global", AssetPaths.global__tmx);
 		Reg.levels.set("home1f", AssetPaths.home1f__tmx);
 		Reg.levels.set('market', AssetPaths.market__tmx);
@@ -57,13 +53,22 @@ class PlayState extends FlxState
 		});
 		*/
 
+		trace(Reg.inv.getItemsName());
+
 		var npc:Character = new Character(9 * 16, 13 * 16, AssetPaths.merchant__png);
 		npc.name = "NPC Character";
-		npc.dialog = ["Richard: Hey how are you today!",
-			"You: I'm ok, thank you.",
-			"Richard: Do you want some candy?",
-			"You: No.",
-			"You: Kek"];
+		npc.dialog = [
+			["key" => "string",   "data" => "Richard: Hey how are you today!"],
+			["key" => "string",   "data" => "You: I'm ok, thank you."],
+			["key" => "string",   "data" => "Richard: Do you want some candy?"],
+			["key" => "function", "data" => {"field": "calc", "args": [3, 3]}],
+			["key" => "string",   "data" => "You: No."],
+			["key" => "string",   "data" => "Richard: Ok, take this Letter."],
+			["key" => "function", "data" => {"field": "addItem", "args": ["letter"]}],
+			["key" => "string",   "data" => "Richard: And this Diskette."],
+			["key" => "function", "data" => {"field": "addItem", "args": ["diskette"]}],
+			["key" => "string",   "data" => "You: Thanks."]
+		];
 		Reg.characters.add(npc);
 		charactersGroup.add(Reg.characters);
 

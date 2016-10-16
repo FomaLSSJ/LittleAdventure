@@ -355,7 +355,7 @@ class ApplicationMain {
 		
 		config = {
 			
-			build: "464",
+			build: "609",
 			company: "FomaLSSJ",
 			file: "LittleAdventure",
 			fps: 60,

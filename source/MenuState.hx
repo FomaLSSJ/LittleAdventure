@@ -10,9 +10,10 @@ import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
 import flixel.util.FlxColor;
+#if flash
 import flash.net.LocalConnection;
-
 import com.newgrounds.components.FlashAd;
+#end
 
 class MenuState extends FlxState
 {
@@ -23,7 +24,9 @@ class MenuState extends FlxState
 	public var inputPass:FlxInputText;
 	public var requestButton:FlxButton;
 
+	#if flash
 	private var flashAd:FlashAd = new FlashAd();
+	#end
 
 	override public function create():Void
 	{
@@ -31,6 +34,7 @@ class MenuState extends FlxState
 
 		//FlxG.log.redirectTraces = true;
 
+		#if flash
 		flashAd.x = FlxG.width / 2 - flashAd.width / 2;
 		flashAd.y = FlxG.height / 2 - flashAd.height / 2;
 		FlxG.stage.addChild(flashAd);
@@ -44,6 +48,7 @@ class MenuState extends FlxState
 		{
 			Reg.debugger = true;
 		}
+		#end
 
 		Reg.server = "https://nodejs-api-fomalssj.c9users.io";
 
@@ -99,7 +104,9 @@ class MenuState extends FlxState
 
 	private function onPlay():Void
 	{
+		#if flash
 		FlxG.stage.removeChild(flashAd);
+		#end
 		FlxG.switchState(new PlayState());
 	}
 
@@ -110,8 +117,10 @@ class MenuState extends FlxState
 			onPlay();
 			return;
 		}
-		Reg.request.login(inputName.text, inputPass.text, statusMessage, function (){
+		Reg.request.login(inputName.text, inputPass.text, statusMessage, function () {
+			#if flash	
 			FlxG.stage.removeChild(flashAd);
+			#end
 		});
 	}
 }
