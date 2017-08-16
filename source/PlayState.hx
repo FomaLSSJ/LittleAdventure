@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
 import flixel.FlxBasic;
@@ -24,10 +25,12 @@ class PlayState extends FlxState
 	private var objectGroup:FlxGroup = new FlxGroup();
 	private var guiGroup:FlxGroup = new FlxGroup();
 	private var doorsGroup:FlxGroup = new FlxGroup();
-	private var charactersGroup:FlxGroup = new FlxGroup();
+	private var charactersGroup:FlxTypedGroup<Character> = new FlxTypedGroup();
 	
 	private var testing:Bool = false;
 
+	private var tempData:Map<String, Dynamic> = new Map();
+	
 	override public function create():Void
 	{
 		super.create();
@@ -56,6 +59,7 @@ class PlayState extends FlxState
 		trace(Reg.inv.getItemsName());
 
 		var npc:Character = new Character(9 * 16, 13 * 16, AssetPaths.merchant__png);
+		npc.id = "npc0001";
 		npc.name = "NPC Character";
 		npc.dialog = [
 			["key" => "string",   "data" => "Richard: Hey how are you today!"],
@@ -69,9 +73,24 @@ class PlayState extends FlxState
 			["key" => "function", "data" => {"field": "addItem", "args": ["diskette"]}],
 			["key" => "string",   "data" => "You: Thanks."]
 		];
-		Reg.characters.add(npc);
-		charactersGroup.add(Reg.characters);
 
+		Reg.charactersMap.set(npc.id, npc);
+		charactersGroup.add(npc);
+
+		var bro:Character = new Character(20 * 16, 13 * 16, AssetPaths.char__png);
+		bro.id = "bro0001";
+		bro.name = "Bro";
+		bro.dialog = [
+			["key" => "string",   "data" => "Bro: Hey, Bro1!"],
+			["key" => "function", "data" => {"field": "endDialog", "args": []}],
+			["key" => "string",   "data" => "Bro: Hey, Bro2!"],
+			["key" => "index", "data" => {"index": 0}],
+			["key" => "string",   "data" => "Bro: Hey, Bro3!"]
+		];
+
+		Reg.charactersMap.set(bro.id, bro);
+		charactersGroup.add(bro);
+		
 		Reg.gui.init();
 		guiGroup.add(Reg.gui);
 
@@ -84,18 +103,45 @@ class PlayState extends FlxState
 
 	private function loadMap(map:String, ?playerX:Int = 0, ?playerY:Int = 0):Void
 	{
+		charactersGroup.forEach(function(char:Character):Void
+		{
+			tempData.set(char.id, {"id": char.id, "x": char.x, "y": char.y, "name": char.name, "map": Reg.current, "direction": char.getDirection()});
+			trace(char.name, char.x, char.y, Reg.current);
+		});
+		
 		Reg.current = map;
 		Reg.level = new TiledLevel(Reg.levels.get(map));
 
 		backMap.clear();
 		frontMap.clear();
 		doorsGroup.clear();
+		charactersGroup.clear();
 
+		if (!Reg.charactersMap.exists("girl0001") && map == "home1f") {
+			var girl:Character = new Character(6 * 16, 6 * 16, AssetPaths.beachgirl__png);
+			girl.id = "girl0001";
+			girl.name = "Beach Girl";
+			girl.dialog = [
+				["key" => "string", "data" => "Girl: Hi!"]
+			];
+
+			Reg.charactersMap.set(girl.id, girl);
+			charactersGroup.add(girl);
+		}
+		
 		backMap.add(Reg.level.blockedtiles);
 		backMap.add(Reg.level.background);
 		frontMap.add(Reg.level.foreground);
 		doorsGroup.add(Reg.level.doors);
 
+		for (data in tempData)
+		{
+			if (Reg.current == data.map)
+			{
+				charactersGroup.add(Reg.charactersMap.get(data.id));
+			}
+		}
+		
 		if (playerX != 0 && playerY != 0)
 		{
 			if (player != null)

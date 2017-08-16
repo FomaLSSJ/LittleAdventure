@@ -174,6 +174,10 @@ class ApplicationMain {
 		types.push (lime.Assets.AssetType.IMAGE);
 		
 		
+		urls.push ("flixel/images/logo/default.png");
+		types.push (lime.Assets.AssetType.IMAGE);
+		
+		
 		urls.push ("flixel/flixel-ui/img/box.png");
 		types.push (lime.Assets.AssetType.IMAGE);
 		
@@ -355,7 +359,7 @@ class ApplicationMain {
 		
 		config = {
 			
-			build: "609",
+			build: "677",
 			company: "FomaLSSJ",
 			file: "LittleAdventure",
 			fps: 60,

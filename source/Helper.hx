@@ -17,4 +17,10 @@ class Helper
 	{
 		Reg.inv.addItem(Reg.itemsList.get(name));
 	}
+	
+	public function endDialog():Void
+	{
+		Reg.gui.toggleDialog();
+		Reg.isDialog = false;
+	}
 }

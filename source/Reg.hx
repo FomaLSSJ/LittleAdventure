@@ -10,7 +10,7 @@ class Reg
 	public static var current:String = "";
 	public static var levels:Map<String,Dynamic> = new Map();
 	public static var level:TiledLevel = null;
-	public static var characters:FlxTypedGroup<Character> = new FlxTypedGroup<Character>();
+	public static var charactersMap:Map<String, Character> = new Map();
 
 	public static var scores:Array<Dynamic> = [];
 	public static var score:Int = 0;
@@ -26,4 +26,6 @@ class Reg
 	public static var inv:Inventory = new Inventory();
 	public static var itemsList:Map<String,Item> = new Map<String,Item>();
 	public static var helper:Helper = new Helper();
+	
+	public static var isDialog:Bool = false;
 }

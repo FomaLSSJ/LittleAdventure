@@ -9,17 +9,17 @@ class Character extends FlxSprite {
 	private static inline var MOVEMENT_SPEED:Int = 1;
 	private static inline var ANIMATION_SPEED:Int = 2;
 
-	private var direction:Int = FlxObject.DOWN;
-
+	public var id:String = "None";
 	public var name:String = "__NAME__";
 	public var dialogIndex:Int = 0;
 	public var dialog:Array<Map<String,Dynamic>> = new Array<Map<String,Dynamic>>();
-
+	
 	public function new(X:Float=0, Y:Float=0, ?SimpleGraphic:Dynamic):Void
 	{
 		super(X, Y);
 
 		immovable = true;
+		facing = FlxObject.UP;
 
 		if (SimpleGraphic)
 		{
@@ -60,6 +60,8 @@ class Character extends FlxSprite {
 
 	public function setLook(Direction:Int):Void
 	{
+		this.facing = Direction;
+
 		switch (Direction)
 		{
 			case FlxObject.UP:
@@ -73,8 +75,53 @@ class Character extends FlxSprite {
 		}
 	}
 
+	public function getDirection():Int
+	{
+		return this.facing;
+	}
+	
 	public function startDialog():Void
 	{
-		//null
+		if (this.dialogIndex >= this.dialog.length)
+		{
+			Reg.gui.toggleDialog();
+			Reg.isDialog = false;
+			
+			this.dialogIndex = 0;
+		}
+		else
+		{
+			var stack:Map<String,Dynamic> = this.dialog[this.dialogIndex];
+			
+			trace("Index:" + this.dialogIndex);
+			
+			switch (stack.get("key"))
+			{
+				case "string":
+					Reg.gui.setText(stack.get("data"));
+					this.dialogIndex++;
+				case "function":
+					var data = stack.get("data");
+					
+					Reflect.callMethod(Reg.helper, Reflect.field(Reg.helper, data.field), data.args);
+					this.dialogIndex++;
+					
+					if (Reg.isDialog)
+					{
+						startDialog();
+					}
+				case "index":
+					var data = stack.get("data");
+
+					this.dialogIndex = Std.parseInt(data.index);
+					
+					if (Reg.isDialog)
+					{
+						startDialog();
+					}
+				default:
+					//null
+			}
+		}
 	}
 }

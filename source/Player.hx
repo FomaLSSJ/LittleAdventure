@@ -13,8 +13,6 @@ class Player extends FlxSprite
 	private static inline var MOVEMENT_SPEED:Int = 1;
 	private static inline var ANIMATION_SPEED:Int = 2;
 
-	private var isDialog:Bool;
-
 	public var moveToNextTile:Bool;
 	public var moveToDoor:Bool;
 
@@ -52,7 +50,7 @@ class Player extends FlxSprite
 	{
 		super.update(elapsed);
 
-		if (!isDialog)
+		if (!Reg.isDialog)
 		{
 			movement();
 		}
@@ -64,23 +62,24 @@ class Player extends FlxSprite
 	{
 		if (FlxG.keys.justPressed.SPACE)
 		{
-			if (!isDialog)
+			if (!Reg.isDialog)
 			{
-				checkCharacters(Reg.characters);
+				checkCharacters();
 			}
 			else
 			{
-				dialog();
+				executeCharacter.startDialog();
 			}
 		}
 	}
 
+	/*
 	private function dialog():Void
 	{
 		if (executeCharacter.dialogIndex >= executeCharacter.dialog.length)
 		{
 			Reg.gui.toggleDialog();
-			isDialog = false;
+			Reg.isDialog = false;
 
 			executeCharacter.dialogIndex = 0;
 			trace(Reg.inv.getItemsName());
@@ -108,6 +107,7 @@ class Player extends FlxSprite
 			}
 		}
 	}
+	*/
 	
 	private function movement():Void
 	{
@@ -175,22 +175,23 @@ class Player extends FlxSprite
 		p.moveToNextTile = false;
 	}
 
-	public function checkCharacters(characters:FlxTypedGroup<Character>):Void
+	public function checkCharacters():Void
 	{
-		characters.forEach(function(character:Character):Void
+		for (character in Reg.charactersMap)
 		{
 			var nextTile:FlxPoint = checkNextTile();
-
+			
 			if (character.x == nextTile.x && character.y == nextTile.y)
 			{
 				executeCharacter = character;
 				executeCharacter.execute(this);
 
-				isDialog = true;
+				Reg.isDialog = true;
 				Reg.gui.toggleDialog();
-				dialog();
+				
+				executeCharacter.startDialog();
 			}
-		});
+		}
 	}
 
 	public function checkNextTile():FlxPoint
