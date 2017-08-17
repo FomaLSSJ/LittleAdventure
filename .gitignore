@@ -1,5 +1,7 @@
 # Build and Release Folders
 export/flash/bin/
+export/windows/
+export/html5/
 
 # Other files and folders
 .settings/
