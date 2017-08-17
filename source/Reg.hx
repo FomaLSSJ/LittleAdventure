@@ -24,8 +24,14 @@ class Reg
 	public static var gui:GUI = new GUI();
 	
 	public static var inv:Inventory = new Inventory();
-	public static var itemsList:Map<String,Item> = new Map<String,Item>();
+	public static var itemsList:Map<String, Item> = new Map<String, Item>();
 	public static var helper:Helper = new Helper();
 	
-	public static var isDialog:Bool = false;
+	public static var charactersTempData:Map<String, Dynamic> = new Map();
+	
+	public static var triggers:Map<String, Dynamic> = [
+		"is_dialog"    => false,
+		"is_inventory" => false,
+		"select"       => {"x": 0, "y": 0}
+	];
 }

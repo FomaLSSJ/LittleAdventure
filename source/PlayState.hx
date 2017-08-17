@@ -28,8 +28,6 @@ class PlayState extends FlxState
 	private var charactersGroup:FlxTypedGroup<Character> = new FlxTypedGroup();
 	
 	private var testing:Bool = false;
-
-	private var tempData:Map<String, Dynamic> = new Map();
 	
 	override public function create():Void
 	{
@@ -37,12 +35,20 @@ class PlayState extends FlxState
 		
 		Reg.itemsList.set("letter", new Item("Letter", AssetPaths.letter__png));
 		Reg.itemsList.set("pencil", new Item("Pencil", AssetPaths.pencil__png));
-		Reg.itemsList.set("diskette", new Item("Diskette", AssetPaths.diskette__png));
+		Reg.itemsList.set("diskette", new Item("Diskette", true, AssetPaths.diskette__png));
 		
 		Reg.levels.set("global", AssetPaths.global__tmx);
 		Reg.levels.set("home1f", AssetPaths.home1f__tmx);
 		Reg.levels.set('market', AssetPaths.market__tmx);
 
+		//TODO Testing remove after//
+		Reg.inv.addItem('letter');
+		Reg.inv.addItem('pencil');
+		Reg.inv.addItem('diskette');
+		
+		Reg.inv.removeItem('letter', 2);
+		/////////////////////////////
+		
 		loadMap("global");
 
 		player = new Player(posX, posY, AssetPaths.char__png);
@@ -105,7 +111,7 @@ class PlayState extends FlxState
 	{
 		charactersGroup.forEach(function(char:Character):Void
 		{
-			tempData.set(char.id, {"id": char.id, "x": char.x, "y": char.y, "name": char.name, "map": Reg.current, "direction": char.getDirection()});
+			Reg.charactersTempData.set(char.id, {"id": char.id, "x": char.x, "y": char.y, "name": char.name, "map": Reg.current, "direction": char.getDirection()});
 			trace(char.name, char.x, char.y, Reg.current);
 		});
 		
@@ -134,7 +140,7 @@ class PlayState extends FlxState
 		frontMap.add(Reg.level.foreground);
 		doorsGroup.add(Reg.level.doors);
 
-		for (data in tempData)
+		for (data in Reg.charactersTempData)
 		{
 			if (Reg.current == data.map)
 			{

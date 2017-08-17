@@ -7,7 +7,6 @@ class Helper
 		trace("Helper created");
 	}
 
-	//TODO Тестовая функция для проверки Reflect. Можно удалить в песду.
 	public function calc(?f:Int = 1, ?s:Int = 1):Void
 	{
 		trace(f + s);
@@ -21,6 +20,6 @@ class Helper
 	public function endDialog():Void
 	{
 		Reg.gui.toggleDialog();
-		Reg.isDialog = false;
+		Reg.triggers.set('is_dialog', false);
 	}
 }

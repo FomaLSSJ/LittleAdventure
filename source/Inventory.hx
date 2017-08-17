@@ -1,6 +1,12 @@
 package;
 
+import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
+
+enum Direction {
+	LEFT;
+	RIGHT;
+}
 
 class Inventory extends FlxTypedGroup<Item>
 {
@@ -9,7 +15,7 @@ class Inventory extends FlxTypedGroup<Item>
 		super(MaxSize);
 	}
 	
-	public function addItem(item:Dynamic):Void
+	public function addItem(item:Dynamic, ?Count:Int = 1):Void
 	{
 		var append:Item = null;
 		
@@ -22,8 +28,12 @@ class Inventory extends FlxTypedGroup<Item>
 			append = item;
 		}
 		
+		if (checkItem(append.name) && append.multiple)
+		{
+			append.count += Count;
+		}
+		
 		this.add(append);
-		return;
 	}
 	
 	public function getItem(name:String):Dynamic
@@ -75,7 +85,7 @@ class Inventory extends FlxTypedGroup<Item>
 		}
 	}
 	
-	public function removeItem(name:Dynamic):Void
+	public function removeItem(name:Dynamic, ?Count:Int = 1):Void
 	{
 		var found:String = "";
 		
@@ -93,9 +103,58 @@ class Inventory extends FlxTypedGroup<Item>
 		{
 			if (item.name == found)
 			{
-				this.remove(item);
-				return;
+				var result:Int = item.count - Count;
+				
+				if (result > 1)
+				{
+					item.count -= Count;
+				}
+				else
+				{
+					this.remove(item, true);
+				}
 			}
 		});
+	}
+	
+	public function updateItems(offset:Float):Void
+	{
+		var index:Int = 0;
+		var posY:Float = FlxG.height - offset + 32;
+
+		this.forEach(function (item):Void
+		{
+			item.x = 6 + 20 * index + 4;
+			item.y = posY;
+			
+			index++;
+		});
+	}
+	
+	public function moveSelector(direction:Direction):Void
+	{
+		var select:Dynamic = Reg.triggers.get('select');
+
+		if (direction == Direction.LEFT)
+		{
+			select.x -= 1;
+			
+			if (select.x < 0)
+			{
+				select.x = Reg.inv.members.length - 1;
+			}
+		}
+		else
+		{
+			select.x += 1;
+			
+			if (select.x > Reg.inv.length - 1)
+			{
+				select.x = 0;
+			}
+		}
+		
+		Reg.triggers.set('select', select);
+		Reg.gui.updateInventory();
 	}
 }

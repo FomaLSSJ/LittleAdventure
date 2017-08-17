@@ -50,19 +50,27 @@ class Player extends FlxSprite
 	{
 		super.update(elapsed);
 
-		if (!Reg.isDialog)
+		if (!Reg.gui.isActive())
 		{
 			movement();
 		}
+		
+		if (!Reg.triggers.get('is_inventory'))
+		{
+			use();
+		}
 
-		use();
+		if (!Reg.triggers.get('is_dialog') && !moveToNextTile)
+		{
+			inventory();
+		}
 	}
 
 	private function use():Void
 	{
-		if (FlxG.keys.justPressed.SPACE)
+		if (FlxG.keys.anyJustPressed(["SPACE", "Z"]))
 		{
-			if (!Reg.isDialog)
+			if (!Reg.gui.isActive())
 			{
 				checkCharacters();
 			}
@@ -72,42 +80,24 @@ class Player extends FlxSprite
 			}
 		}
 	}
-
-	/*
-	private function dialog():Void
+	
+	private function inventory():Void
 	{
-		if (executeCharacter.dialogIndex >= executeCharacter.dialog.length)
+		if (FlxG.keys.justPressed.X)
 		{
-			Reg.gui.toggleDialog();
-			Reg.isDialog = false;
-
-			executeCharacter.dialogIndex = 0;
-			trace(Reg.inv.getItemsName());
-			return;
+			Reg.gui.toggleInventory();
 		}
-		else
+		
+		if (FlxG.keys.justPressed.RIGHT)
 		{
-			var stack:Map<String,Dynamic> = executeCharacter.dialog[executeCharacter.dialogIndex];
-			
-			trace("Index:" + executeCharacter.dialogIndex);
-			
-			switch (stack.get("key"))
-			{
-				case "string":
-					Reg.gui.setText(stack.get("data"));
-					executeCharacter.dialogIndex++;
-				case "function":
-					var data = stack.get("data");
-					
-					Reflect.callMethod(Reg.helper, Reflect.field(Reg.helper, data.field), data.args);
-					executeCharacter.dialogIndex++;
-					dialog();
-				default:
-					//null
-			}
+			Reg.inv.moveSelector(RIGHT);
+		}
+		
+		if (FlxG.keys.justPressed.LEFT)
+		{
+			Reg.inv.moveSelector(LEFT);
 		}
 	}
-	*/
 	
 	private function movement():Void
 	{
@@ -185,9 +175,6 @@ class Player extends FlxSprite
 			{
 				executeCharacter = character;
 				executeCharacter.execute(this);
-
-				Reg.isDialog = true;
-				Reg.gui.toggleDialog();
 				
 				executeCharacter.startDialog();
 			}

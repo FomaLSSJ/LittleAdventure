@@ -82,10 +82,14 @@ class Character extends FlxSprite {
 	
 	public function startDialog():Void
 	{
+		if (!Reg.gui.isActive())
+		{
+			Reg.gui.toggleDialog();
+		}
+		
 		if (this.dialogIndex >= this.dialog.length)
 		{
 			Reg.gui.toggleDialog();
-			Reg.isDialog = false;
 			
 			this.dialogIndex = 0;
 		}
@@ -106,7 +110,7 @@ class Character extends FlxSprite {
 					Reflect.callMethod(Reg.helper, Reflect.field(Reg.helper, data.field), data.args);
 					this.dialogIndex++;
 					
-					if (Reg.isDialog)
+					if (Reg.gui.isActive())
 					{
 						startDialog();
 					}
@@ -115,7 +119,7 @@ class Character extends FlxSprite {
 
 					this.dialogIndex = Std.parseInt(data.index);
 					
-					if (Reg.isDialog)
+					if (Reg.gui.isActive())
 					{
 						startDialog();
 					}
