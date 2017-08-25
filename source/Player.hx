@@ -23,8 +23,8 @@ class Player extends FlxSprite
 		super(X, Y);
 
 		this.facing = FlxObject.DOWN;
-
-		if (SimpleGraphic)
+		
+		if (SimpleGraphic != null)
 		{
 			loadGraphic(SimpleGraphic, true, TILE_SIZE, TILE_SIZE);
 

@@ -112,15 +112,17 @@ class MenuState extends FlxState
 
 	private function onRequest()
 	{
-		if (Reg.debugger)
-		{
+		//if (Reg.debugger)
+		//{
 			onPlay();
 			return;
-		}
+		//}
+		/*
 		Reg.request.login(inputName.text, inputPass.text, statusMessage, function () {
 			#if flash	
 			FlxG.stage.removeChild(flashAd);
 			#end
 		});
+		*/
 	}
 }

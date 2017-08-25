@@ -25,7 +25,6 @@ class PlayState extends FlxState
 	private var objectGroup:FlxGroup = new FlxGroup();
 	private var guiGroup:FlxGroup = new FlxGroup();
 	private var doorsGroup:FlxGroup = new FlxGroup();
-	private var charactersGroup:FlxTypedGroup<Character> = new FlxTypedGroup();
 	
 	private var testing:Bool = false;
 	
@@ -81,7 +80,7 @@ class PlayState extends FlxState
 		];
 
 		Reg.charactersMap.set(npc.id, npc);
-		charactersGroup.add(npc);
+		Reg.charactersGroup.add(npc);
 
 		var bro:Character = new Character(20 * 16, 13 * 16, AssetPaths.char__png);
 		bro.id = "bro0001";
@@ -90,26 +89,27 @@ class PlayState extends FlxState
 			["key" => "string",   "data" => "Bro: Hey, Bro1!"],
 			["key" => "function", "data" => {"field": "endDialog", "args": []}],
 			["key" => "string",   "data" => "Bro: Hey, Bro2!"],
+			["key" => "destroy", "data" => {}],
 			["key" => "index", "data" => {"index": 0}],
 			["key" => "string",   "data" => "Bro: Hey, Bro3!"]
 		];
 
 		Reg.charactersMap.set(bro.id, bro);
-		charactersGroup.add(bro);
+		Reg.charactersGroup.add(bro);
 		
 		Reg.gui.init();
 		guiGroup.add(Reg.gui);
 
 		add(backMap);
 		add(objectGroup);
-		add(charactersGroup);
+		add(Reg.charactersGroup);
 		add(frontMap);
 		add(guiGroup);
 	}
 
 	private function loadMap(map:String, ?playerX:Int = 0, ?playerY:Int = 0):Void
 	{
-		charactersGroup.forEach(function(char:Character):Void
+		Reg.charactersGroup.forEach(function(char:Character):Void
 		{
 			Reg.charactersTempData.set(char.id, {"id": char.id, "x": char.x, "y": char.y, "name": char.name, "map": Reg.current, "direction": char.getDirection()});
 			trace(char.name, char.x, char.y, Reg.current);
@@ -121,7 +121,7 @@ class PlayState extends FlxState
 		backMap.clear();
 		frontMap.clear();
 		doorsGroup.clear();
-		charactersGroup.clear();
+		Reg.charactersGroup.clear();
 
 		if (!Reg.charactersMap.exists("girl0001") && map == "home1f") {
 			var girl:Character = new Character(6 * 16, 6 * 16, AssetPaths.beachgirl__png);
@@ -132,7 +132,7 @@ class PlayState extends FlxState
 			];
 
 			Reg.charactersMap.set(girl.id, girl);
-			charactersGroup.add(girl);
+			Reg.charactersGroup.add(girl);
 		}
 		
 		backMap.add(Reg.level.blockedtiles);
@@ -144,7 +144,13 @@ class PlayState extends FlxState
 		{
 			if (Reg.current == data.map)
 			{
-				charactersGroup.add(Reg.charactersMap.get(data.id));
+				var char:Character = Reg.charactersMap.get(data.id);
+				
+				if (!char.alive)
+				{
+					char.revive();
+				}
+				Reg.charactersGroup.add(Reg.charactersMap.get(data.id));
 			}
 		}
 		
@@ -178,7 +184,7 @@ class PlayState extends FlxState
 		{
 			player.moveToNextTile = false;
 		}
-		FlxG.collide(player, charactersGroup, player.collideCharacters);
+		FlxG.collide(player, Reg.charactersGroup, player.collideCharacters);
 
 
 		if (FlxG.keys.justPressed.F8)

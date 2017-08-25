@@ -27,6 +27,7 @@ class Reg
 	public static var itemsList:Map<String, Item> = new Map<String, Item>();
 	public static var helper:Helper = new Helper();
 	
+	public static var charactersGroup:FlxTypedGroup<Character> = new FlxTypedGroup();
 	public static var charactersTempData:Map<String, Dynamic> = new Map();
 	
 	public static var triggers:Map<String, Dynamic> = [

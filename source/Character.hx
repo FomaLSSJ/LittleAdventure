@@ -21,7 +21,7 @@ class Character extends FlxSprite {
 		immovable = true;
 		facing = FlxObject.UP;
 
-		if (SimpleGraphic)
+		if (SimpleGraphic != null)
 		{
 			loadGraphic(SimpleGraphic, true, TILE_SIZE, TILE_SIZE);
 
@@ -123,6 +123,14 @@ class Character extends FlxSprite {
 					{
 						startDialog();
 					}
+				case 'destroy':
+					Reg.gui.toggleDialog();
+					Reg.triggers.set('is_dialog', false);
+					
+					Reg.charactersTempData.set('bro0001', {"id": "bro0001", "x": 2, "y": 2, "name": "Bro", "map": "home1f", "direction": 0});
+					Reg.charactersGroup.remove(this, true);
+					
+					this.kill();
 				default:
 					//null
 			}
