@@ -124,10 +124,17 @@ class Character extends FlxSprite {
 						startDialog();
 					}
 				case 'destroy':
+					var data = stack.get("data");
+					
+					if (data.index != null)
+					{
+						this.dialogIndex = Std.parseInt(data.index);
+					}
+					
 					Reg.gui.toggleDialog();
 					Reg.triggers.set('is_dialog', false);
 					
-					Reg.charactersTempData.set('bro0001', {"id": "bro0001", "x": 2, "y": 2, "name": "Bro", "map": "home1f", "direction": 0});
+					Reg.charactersTempData.set('bro0001', {"id": "bro0001", "x": 208, "y": 96, "name": "Bro", "map": "home1f", "direction": 1});
 					Reg.charactersGroup.remove(this, true);
 					
 					this.kill();

@@ -2,6 +2,7 @@
 export/flash/bin/
 export/windows/
 export/html5/
+export/neko/
 
 # Other files and folders
 .settings/

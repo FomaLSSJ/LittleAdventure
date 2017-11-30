@@ -9,7 +9,6 @@ import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
 import flixel.FlxBasic;
 import flixel.math.FlxPoint;
-import haxe.rtti.Rtti;
 
 class PlayState extends FlxState
 {
@@ -31,6 +30,11 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		super.create();
+		
+		FlxG.console.registerFunction("playerPos", function ():String
+		{
+			return "X:" + player.x + " Y:" + player.y + " DIR:" + player.getDirection();
+		});
 		
 		Reg.itemsList.set("letter", new Item("Letter", AssetPaths.letter__png));
 		Reg.itemsList.set("pencil", new Item("Pencil", AssetPaths.pencil__png));
@@ -67,16 +71,16 @@ class PlayState extends FlxState
 		npc.id = "npc0001";
 		npc.name = "NPC Character";
 		npc.dialog = [
-			["key" => "string",   "data" => "Richard: Hey how are you today!"],
-			["key" => "string",   "data" => "You: I'm ok, thank you."],
-			["key" => "string",   "data" => "Richard: Do you want some candy?"],
-			["key" => "function", "data" => {"field": "calc", "args": [3, 3]}],
-			["key" => "string",   "data" => "You: No."],
-			["key" => "string",   "data" => "Richard: Ok, take this Letter."],
-			["key" => "function", "data" => {"field": "addItem", "args": ["letter"]}],
-			["key" => "string",   "data" => "Richard: And this Diskette."],
-			["key" => "function", "data" => {"field": "addItem", "args": ["diskette"]}],
-			["key" => "string",   "data" => "You: Thanks."]
+			[ "key" => "string",   "data" => "Richard: Hey how are you today!" ],
+			[ "key" => "string",   "data" => "You: I'm ok, thank you." ],
+			[ "key" => "string",   "data" => "Richard: Do you want some candy?" ],
+			[ "key" => "function", "data" => { "field": "calc", "args": [ 3, 3 ] } ],
+			[ "key" => "string",   "data" => "You: No."],
+			[ "key" => "string",   "data" => "Richard: Ok, take this Letter." ],
+			[ "key" => "function", "data" => {"field": "addItem", "args": [ "letter" ]} ],
+			[ "key" => "string",   "data" => "Richard: And this Diskette." ],
+			[ "key" => "function", "data" => {"field": "addItem", "args": [ "diskette" ]} ],
+			[ "key" => "string",   "data" => "You: Thanks." ]
 		];
 
 		Reg.charactersMap.set(npc.id, npc);
@@ -86,12 +90,13 @@ class PlayState extends FlxState
 		bro.id = "bro0001";
 		bro.name = "Bro";
 		bro.dialog = [
-			["key" => "string",   "data" => "Bro: Hey, Bro1!"],
-			["key" => "function", "data" => {"field": "endDialog", "args": []}],
-			["key" => "string",   "data" => "Bro: Hey, Bro2!"],
-			["key" => "destroy", "data" => {}],
-			["key" => "index", "data" => {"index": 0}],
-			["key" => "string",   "data" => "Bro: Hey, Bro3!"]
+			[ "key" => "string",   "data" => "Bro: Hey, Bro1!" ],
+			[ "key" => "function", "data" => { field: "endDialog", args: [] } ],
+			[ "key" => "string",   "data" => "Bro: Hey, Bro2!"],
+			[ "key" => "destroy",  "data" => { index: 4 } ],
+			[ "key" => "string",   "data" => "Bro: Hey, Bro3!" ],
+			[ "key" => "function", "data" => { field: "endDialog", args: [] } ],
+			[ "key" => "index",    "data" => { index: 4 } ]
 		];
 
 		Reg.charactersMap.set(bro.id, bro);
@@ -128,7 +133,7 @@ class PlayState extends FlxState
 			girl.id = "girl0001";
 			girl.name = "Beach Girl";
 			girl.dialog = [
-				["key" => "string", "data" => "Girl: Hi!"]
+				[ "key" => "string", "data" => "Girl: Hi!" ]
 			];
 
 			Reg.charactersMap.set(girl.id, girl);
@@ -145,11 +150,13 @@ class PlayState extends FlxState
 			if (Reg.current == data.map)
 			{
 				var char:Character = Reg.charactersMap.get(data.id);
+				char.setPosition(data.x, data.y);
 				
 				if (!char.alive)
 				{
 					char.revive();
 				}
+
 				Reg.charactersGroup.add(Reg.charactersMap.get(data.id));
 			}
 		}

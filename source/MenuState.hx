@@ -1,5 +1,6 @@
 package;
 
+import flash.utils.ByteArray;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -50,7 +51,7 @@ class MenuState extends FlxState
 		}
 		#end
 
-		Reg.server = "https://nodejs-api-fomalssj.c9users.io";
+		Reg.server = "http://localhost:3000";
 
 		statusMessage = new FlxText(10, 10, FlxG.width - 20, "");
 
@@ -110,19 +111,18 @@ class MenuState extends FlxState
 		FlxG.switchState(new PlayState());
 	}
 
-	private function onRequest()
+	private function onRequest():Void
 	{
-		//if (Reg.debugger)
-		//{
+		if (Reg.debugger == true)
+		{
 			onPlay();
 			return;
-		//}
-		/*
+		}
+		
 		Reg.request.login(inputName.text, inputPass.text, statusMessage, function () {
 			#if flash	
 			FlxG.stage.removeChild(flashAd);
 			#end
 		});
-		*/
 	}
 }

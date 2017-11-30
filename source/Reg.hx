@@ -16,6 +16,7 @@ class Reg
 	public static var score:Int = 0;
 	public static var saves:Array<FlxSave> = [];
 
+	/* public static var network:Network = new Network(); //TCP Socket */
 	public static var server:String = "https://nodejs-api-fomalssj.c9users.io";
 	public static var request:Request = new Request();
 	public static var name:String = "__NAME__";

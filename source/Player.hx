@@ -171,7 +171,7 @@ class Player extends FlxSprite
 		{
 			var nextTile:FlxPoint = checkNextTile();
 			
-			if (character.x == nextTile.x && character.y == nextTile.y)
+			if (character.x == nextTile.x && character.y == nextTile.y && character.alive == true)
 			{
 				executeCharacter = character;
 				executeCharacter.execute(this);
