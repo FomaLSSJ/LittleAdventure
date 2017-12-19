@@ -50,6 +50,10 @@ class MenuState extends FlxState
 			Reg.debugger = true;
 		}
 		#end
+		
+		#if (neko || windows)
+		Reg.debugger = true;
+		#end
 
 		Reg.server = "http://localhost:3000";
 

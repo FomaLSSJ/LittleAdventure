@@ -9,6 +9,7 @@ import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
 import flixel.FlxBasic;
 import flixel.math.FlxPoint;
+import haxe.Timer;
 
 class PlayState extends FlxState
 {
@@ -36,6 +37,11 @@ class PlayState extends FlxState
 			return "X:" + player.x + " Y:" + player.y + " DIR:" + player.getDirection();
 		});
 		
+		FlxG.console.registerFunction("useItem", function ():Void
+		{
+			Reg.inv.useItem();
+		});
+		
 		Reg.itemsList.set("letter", new Item("Letter", AssetPaths.letter__png));
 		Reg.itemsList.set("pencil", new Item("Pencil", AssetPaths.pencil__png));
 		Reg.itemsList.set("diskette", new Item("Diskette", true, AssetPaths.diskette__png));
@@ -50,6 +56,13 @@ class PlayState extends FlxState
 		Reg.inv.addItem('diskette');
 		
 		Reg.inv.removeItem('letter', 2);
+		
+		var letter:Item = Reg.itemsList.get("letter");
+		letter.setScript([
+			[ "key" => "string",   "data" => "You: Hmm.." ],
+			[ "key" => "string",   "data" => "You: Only letter." ],
+			[ "key" => "string",   "data" => "You: Nothing different." ]
+		]);
 		/////////////////////////////
 		
 		loadMap("global");
@@ -198,6 +211,11 @@ class PlayState extends FlxState
 		{
 			//Reg.request.test();
 			Reg.gui.toggleDialog();
+		}
+		
+		if (Timer.stamp() - Reg.triggers.get("timer") > 1)
+		{
+			Reg.triggers.set("timer", Timer.stamp());
 		}
 	}
 

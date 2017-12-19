@@ -32,8 +32,9 @@ class Reg
 	public static var charactersTempData:Map<String, Dynamic> = new Map();
 	
 	public static var triggers:Map<String, Dynamic> = [
-		"is_dialog"    => false,
-		"is_inventory" => false,
-		"select"       => {"x": 0, "y": 0}
+		"is_dialog"   	=> false,
+		"is_inventory"	=> false,
+		"select"		=> {"x": 0, "y": 0},
+		"timer"			=> 0.0
 	];
 }

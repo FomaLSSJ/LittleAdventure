@@ -28,6 +28,10 @@ class GUI extends FlxGroup
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+		
+		status.text = '${ Reg.name } \n ${ Reg.triggers.get("timer") }';
+		
+		updateInventory();
 	}
 
 	public function init():Void
@@ -43,7 +47,7 @@ class GUI extends FlxGroup
 
 		status = new FlxText(10, 10, 128, Reg.name);
 		status.scrollFactor.set(0, 0);
-		status.visible = false;
+		status.visible = true;
 		add(status);
 
 		blank = new FlxSprite();
@@ -81,7 +85,7 @@ class GUI extends FlxGroup
 	public function toggleDialog():Void
 	{
 		dialog.visible = !dialog.visible;
-		Reg.triggers.set('is_dialog', !Reg.triggers.get('is_dialog'));
+		Reg.triggers.set("is_dialog", !Reg.triggers.get("is_dialog"));
 	}
 
 	public function toggleInventory():Void
@@ -91,12 +95,10 @@ class GUI extends FlxGroup
 			items.clear();
 			Reg.inv.updateItems(inventoryBg.height);
 			items.add(Reg.inv);
-			
-			updateInventory();
 		}
 		
 		inventory.visible = !inventory.visible;
-		Reg.triggers.set('is_inventory', !Reg.triggers.get('is_inventory'));
+		Reg.triggers.set("is_inventory", !Reg.triggers.get("is_inventory"));
 	}
 	
 	public function updateInventory():Void
@@ -110,7 +112,7 @@ class GUI extends FlxGroup
 			{
 				var item:Item = Reg.inv.members[select.x];
 
-				if (item.multiple)
+				if (item.multiple == true)
 				{
 					inventoryText.text = "Selected: " + item.name + " i have " + item.count;
 				}
@@ -137,7 +139,12 @@ class GUI extends FlxGroup
 	
 	public function isActive():Bool
 	{
-		return dialog.visible && Reg.triggers.get('is_dialog') ||
-			inventory.visible && Reg.triggers.get('is_inventory');
+		return dialog.visible && Reg.triggers.get("is_dialog") ||
+			inventory.visible && Reg.triggers.get("is_inventory");
+	}
+	
+	public function isActiveDialog():Bool
+	{
+		return dialog.visible && Reg.triggers.get("is_dialog");
 	}
 }

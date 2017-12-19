@@ -49,23 +49,23 @@ class Player extends FlxSprite
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-
+		
 		if (!Reg.gui.isActive())
 		{
 			movement();
 		}
 		
-		if (!Reg.triggers.get('is_inventory'))
+		if (!Reg.triggers.get("is_inventory"))
 		{
 			use();
 		}
 
-		if (!Reg.triggers.get('is_dialog') && !moveToNextTile)
-		{
-			inventory();
-		}
+		inventory();
+		
+		if (!moveToNextTile)
+		{ }
 	}
-
+	
 	private function use():Void
 	{
 		if (FlxG.keys.anyJustPressed(["SPACE", "Z"]))
@@ -83,17 +83,22 @@ class Player extends FlxSprite
 	
 	private function inventory():Void
 	{
-		if (FlxG.keys.justPressed.X)
+		if (FlxG.keys.justPressed.X && !Reg.gui.isActiveDialog())
 		{
 			Reg.gui.toggleInventory();
 		}
 		
-		if (FlxG.keys.justPressed.RIGHT)
+		if (FlxG.keys.anyJustPressed(["SPACE", "Z"]) && Reg.triggers.get("is_inventory"))
+		{
+			Reg.inv.useItem();
+		}
+		
+		if (FlxG.keys.anyJustPressed(["RIGHT", "D"]) && !Reg.gui.isActiveDialog())
 		{
 			Reg.inv.moveSelector(RIGHT);
 		}
 		
-		if (FlxG.keys.justPressed.LEFT)
+		if (FlxG.keys.anyJustPressed(["LEFT", "A"]) && !Reg.gui.isActiveDialog())
 		{
 			Reg.inv.moveSelector(LEFT);
 		}

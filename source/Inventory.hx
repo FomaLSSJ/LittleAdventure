@@ -133,28 +133,32 @@ class Inventory extends FlxTypedGroup<Item>
 	
 	public function moveSelector(direction:Direction):Void
 	{
-		var select:Dynamic = Reg.triggers.get('select');
+		var select:Dynamic = Reg.triggers.get("select");
 
-		if (direction == Direction.LEFT)
+		switch (direction) 
 		{
-			select.x -= 1;
-			
-			if (select.x < 0)
-			{
-				select.x = Reg.inv.members.length - 1;
-			}
-		}
-		else
-		{
-			select.x += 1;
-			
-			if (select.x > Reg.inv.length - 1)
-			{
-				select.x = 0;
-			}
+			case Direction.LEFT:
+				if (--select.x < 0)
+				{
+					select.x = Reg.inv.members.length - 1;
+				}
+			case Direction.RIGHT:
+				if (++select.x > Reg.inv.length - 1)
+				{
+					select.x = 0;
+				}
+			default:
+				return;
 		}
 		
-		Reg.triggers.set('select', select);
-		Reg.gui.updateInventory();
+		Reg.triggers.set("select", select);
+	}
+	
+	public function useItem():Void
+	{
+		var select:Dynamic = Reg.triggers.get("select");
+		var item:Item = Reg.inv.members[ select.x ];
+		
+		return item.startScript();
 	}
 }
