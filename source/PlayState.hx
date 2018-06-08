@@ -1,5 +1,7 @@
 package;
 
+import haxe.Timer;
+import openfl.Lib;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -9,7 +11,6 @@ import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
 import flixel.FlxBasic;
 import flixel.math.FlxPoint;
-import haxe.Timer;
 
 class PlayState extends FlxState
 {
@@ -41,6 +42,13 @@ class PlayState extends FlxState
 		{
 			Reg.inv.useItem();
 		});
+		
+		#if flash
+		Lib.current.stage.application.onExit.add(function (code):Void
+		{
+			trace('Exit with code: $code');
+		});
+		#end
 		
 		Reg.itemsList.set("letter", new Item("Letter", AssetPaths.letter__png));
 		Reg.itemsList.set("pencil", new Item("Pencil", AssetPaths.pencil__png));
@@ -127,6 +135,11 @@ class PlayState extends FlxState
 
 	private function loadMap(map:String, ?playerX:Int = 0, ?playerY:Int = 0):Void
 	{
+		if (Reg.timer.current != 0)
+		{
+			Reg.client.updateCharacterStatistics();
+		}
+		
 		Reg.charactersGroup.forEach(function(char:Character):Void
 		{
 			Reg.charactersTempData.set(char.id, {"id": char.id, "x": char.x, "y": char.y, "name": char.name, "map": Reg.current, "direction": char.getDirection()});
@@ -209,13 +222,16 @@ class PlayState extends FlxState
 
 		if (FlxG.keys.justPressed.F8)
 		{
-			//Reg.request.test();
 			Reg.gui.toggleDialog();
 		}
-		
-		if (Timer.stamp() - Reg.triggers.get("timer") > 1)
+
+		var stamp:Float = Timer.stamp();
+		var offset:Float = Reg.timer.offset;
+		var current:Float = Reg.timer.current;
+
+		if (stamp + offset > current + 1)
 		{
-			Reg.triggers.set("timer", Timer.stamp());
+			Reg.timer.current = stamp + offset;
 		}
 	}
 

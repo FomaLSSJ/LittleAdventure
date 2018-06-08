@@ -12,72 +12,41 @@ class Request
 	public var object:Dynamic;
 	public var timerStart:FlxTimer;
 	public var timerElapsed:Float;
+	@:isVar public var sessionTicket(default, set):String;
 
+	private var endPoint:String = "https://594E.playfabapi.com/Client/";
 	private var callback:Void->Void = null;
 
-	public function new():Void
+	public function new():Void {}
+	
+	public function set_sessionTicket(value:String):String
 	{
-		//null
+		return sessionTicket = value;
 	}
-
-	public function login(login:String, password:String, message:FlxText, ?Callback:Void->Void):Void
+	
+	public function makeRequest(Method:String, Params:Dynamic, Callback:Dynamic->Void): Void
 	{
-		callback = Callback;
-
-		message.text = "Request data..." + "\n";
-
-		req = new Http(Reg.server + "/users/login");
-		req.setHeader("content-type", "application/x-www-form-urlencoded");
-		req.addParameter("username", login);
-		req.addParameter("password", password);
+		req = new Http('${endPoint}${Method}');
+		trace('SessionTicket: $sessionTicket');
+		req.setHeader("content-type", "application/json");
+		req.setHeader("X-Authentication", sessionTicket);
+		req.setPostData(Params);
 		req.request(true);
-
+		
 		req.onData = function (data)
 		{
-			object = Json.parse(data);
-			trace(object.status);
-			message.text += "Status: " + object.status + "\n" + "Message: " + object.message + "\n";
-
-			if (object.status)
-			{
-				Reg.name = object.name;
-
-				if (object.image)
-				{
-					Reg.image = "images/users/" + object.image;
-				}
-
-				timerElapsed = 0;
-				timerStart = new FlxTimer().start(3.0, function (t:FlxTimer)
-				{
-					FlxG.switchState(new PlayState());
-					callback();
-				}, 0);
-			}
+			trace(data);
+			return Callback(Json.parse(data));
 		}
 
 		req.onError = function (data)
 		{
-			message.text += data + "\n";
-			trace(data);
+			trace("Error", data);
 		}
 
 		req.onStatus = function (data)
 		{
-			message.text += "Status Code: " + data + "\n";
-			trace(data);
-		}
-	}
-
-	public function test():Void
-	{
-		req = new Http(Reg.server + "/users/test");
-		req.request(false);
-
-		req.onData = function (data)
-		{
-			object = Json.parse(data);
-			trace(object.text);
+			trace("Status", data);
 		}
 	}
 }

@@ -11,6 +11,7 @@ class GUI extends FlxGroup
 	private var dialogBg:FlxSprite;
 	private var dialogText:FlxText;
 	private var blank:FlxSprite;
+	private var statusBg:FlxSprite;
 	private var status:FlxText;
 	private var inventoryBg:FlxSprite;
 	private var inventoryText:FlxText;
@@ -29,7 +30,17 @@ class GUI extends FlxGroup
 	{
 		super.update(elapsed);
 		
-		status.text = '${ Reg.name } \n ${ Reg.triggers.get("timer") }';
+		var name:String = Reg.name;
+		var current:Float = Reg.timer.current;
+		var sec:Int = Math.floor(current) % 60;
+		var min:Int = Math.floor(current / 60) % 60;
+		var hour:Int = Math.floor(current / 60 / 60) % 24;
+		var online:String = Reg.network.isConnected() ? "Online": "Offline";
+		
+		status.text = 'Name: $name \n';
+		status.text += 'Timestamp: $current \n';
+		status.text += 'PlayTime H:$hour M:$min S:$sec \n';
+		status.text += 'Network: $online';
 		
 		updateInventory();
 	}
@@ -45,6 +56,12 @@ class GUI extends FlxGroup
 		dialogText = new FlxText(10, 10, FlxG.width - 20, "__TEXT__");
 		dialog.add(dialogText);
 
+		statusBg = new FlxSprite(5, 5);
+		statusBg.makeGraphic(160, 50, 0xFF333333);
+		statusBg.scrollFactor.set(0, 0);
+		statusBg.alpha = .65;
+		add(statusBg);
+		
 		status = new FlxText(10, 10, 128, Reg.name);
 		status.scrollFactor.set(0, 0);
 		status.visible = true;

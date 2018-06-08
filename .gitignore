@@ -5,6 +5,8 @@ export/html5/
 export/neko/
 
 # Other files and folders
+.vscode/
+.idea/
 .settings/
 
 # Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
