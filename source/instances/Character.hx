@@ -1,10 +1,11 @@
-package;
+package instances;
 
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 
-class Character extends FlxSprite {
+class Character extends FlxSprite
+{
 	private static inline var TILE_SIZE:Int = 16;
 	private static inline var MOVEMENT_SPEED:Int = 1;
 	private static inline var ANIMATION_SPEED:Int = 2;

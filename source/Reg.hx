@@ -2,12 +2,23 @@ package;
 
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxSave;
-import haxe.Timer;
+
+import net.Network;
+import net.Client;
+
+import hud.GUI;
+
+import map.TiledLevel;
+
+import instances.Character;
+
+import storage.Inventory;
+import storage.Item;
+
+import utils.Helper;
 
 class Reg
 {
-	public static var debugger:Bool = false;
-
 	public static var current:String = "";
 	public static var levels:Map<String,Dynamic> = new Map();
 	public static var level:TiledLevel = null;
@@ -17,9 +28,8 @@ class Reg
 	public static var score:Int = 0;
 	public static var save:FlxSave = new FlxSave();
 
-	/* public static var network:Network = new Network(); //TCP Socket */
-	public static var server:String = "https://nodejs-api-fomalssj.c9users.io";
-	public static var request:Request = new Request();
+	public static var host:String = "127.0.0.1";
+	public static var port:Int = 443;
 	public static var client: Client = new Client();
 	public static var network: Network = new Network();
 	public static var name:String = "__NAME__";

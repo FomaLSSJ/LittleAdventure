@@ -11,6 +11,8 @@ import flixel.FlxState;
 import com.newgrounds.*;
 #end
 
+import states.MenuState;
+
 class Main extends Sprite
 {
 	var gameWidth:Int = 640; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).

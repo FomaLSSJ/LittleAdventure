@@ -1,23 +1,25 @@
-package;
+package states;
 
 import haxe.Timer;
 import openfl.Lib;
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.ui.FlxButton;
-import flixel.math.FlxMath;
-import flixel.FlxBasic;
-import flixel.math.FlxPoint;
+
+import map.Door;
+import map.TiledLevel;
+
+import instances.Player;
+import instances.Character;
+
+import storage.Item;
+import storage.Phone;
 
 class PlayState extends FlxState
 {
 	private var posX:Int = 10 * 16;
 	private var posY:Int = 8 * 16;
 
-	private var image:ImageLoad;
 	private var player:Player;
 	private var username:String;
 
@@ -28,6 +30,8 @@ class PlayState extends FlxState
 	private var doorsGroup:FlxGroup = new FlxGroup();
 	
 	private var testing:Bool = false;
+
+	private var phone:Phone;
 	
 	override public function create():Void
 	{
@@ -131,6 +135,9 @@ class PlayState extends FlxState
 		add(Reg.charactersGroup);
 		add(frontMap);
 		add(guiGroup);
+
+		phone = new Phone();
+		add(phone);
 	}
 
 	private function loadMap(map:String, ?playerX:Int = 0, ?playerY:Int = 0):Void
@@ -233,6 +240,13 @@ class PlayState extends FlxState
 		{
 			Reg.timer.current = stamp + offset;
 		}
+
+		#if debug
+		if (FlxG.keys.justPressed.M)
+		{
+			phone.dragToggle();
+		}
+		#end
 	}
 
 	public function touchDoor(p:Player, d:Door):Void

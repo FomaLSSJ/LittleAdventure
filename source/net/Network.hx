@@ -1,4 +1,4 @@
-package;
+package net;
 
 import haxe.Json;
 import haxe.Timer;
@@ -11,45 +11,51 @@ import openfl.events.IOErrorEvent;
 import openfl.events.SecurityErrorEvent;
 import openfl.events.ProgressEvent;
 import openfl.system.Security;
-//import flash.net.Socket;
-//import flash.events.Event;
-//import flash.events.ProgressEvent;
 #end
 
-#if neko
+#if (neko || windows)
 import sys.net.Host;
 import sys.net.Socket;
 #end
 
 class Network
 {
-	private static var HOST = "127.0.0.1";
-	private static var PORT = 443;
-
-	private var socket:Socket;
+	private var socket: Socket;
 	private var timer: Timer;
 
 	public function new():Void
 	{
-		Security.allowDomain("*");
-		
 		#if flash
-		connection();
+		Security.allowDomain("*");
 		#end
-		
-		#if neko
+
+		connection();
+	}
+	
+	#if (neko || windows)
+	public function connection():Void
+	{
 		socket = new Socket();
-		socket.connect(new Host(HOST), PORT);
+		socket.connect(new Host(Reg.host), Reg.port);
 		
 		while (true)
 		{
 			var line = socket.input.readLine();
 			trace(line);
 		}
-		
-		#end
 	}
-	
+
+	public function write(data:Dynamic):Void
+	{
+		trace(data);
+	}
+
+	public function isConnected():Bool
+	{
+		return (socket != null);
+	}
+	#end
+
 	#if flash
 	public function connection():Void
 	{
@@ -61,7 +67,7 @@ class Network
 		socket.addEventListener(ProgressEvent.SOCKET_DATA, socketDataHandler);
 		socket.addEventListener(IOErrorEvent.IO_ERROR, socketError);
 		
-		socket.connect(HOST, PORT);
+		socket.connect(Reg.host, Reg.port);
 		
 		timer = new Timer(3000);
 		timer.run = function ():Void
@@ -125,6 +131,10 @@ class Network
 		{
 			data += socket.readUTFBytes(1);
 		}
+
+		var object:Dynamic = Json.parse(data);
+		
+		Reg.inv.addItem(object.item);
 
 		trace("Socket data read: " + data);
 	}

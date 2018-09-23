@@ -1,10 +1,12 @@
-package;
+package hud;
 
 import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
+
+import storage.Item;
 
 class GUI extends FlxGroup
 {

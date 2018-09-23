@@ -1,4 +1,4 @@
-package;
+package map;
 
 import flixel.addons.editors.tiled.TiledLayer;
 import flixel.addons.editors.tiled.TiledTileLayer;

@@ -1,4 +1,4 @@
-package;
+package map;
 
 import flixel.FlxSprite;
 
