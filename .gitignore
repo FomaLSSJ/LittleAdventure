@@ -1,8 +1,5 @@
 # Build and Release Folders
-export/flash/bin/
-export/windows/
-export/html5/
-export/neko/
+export/
 
 # Other files and folders
 .vscode/

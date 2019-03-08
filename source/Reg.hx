@@ -44,6 +44,8 @@ class Reg
 	
 	public static var charactersGroup:FlxTypedGroup<Character> = new FlxTypedGroup();
 	public static var charactersTempData:Map<String, Dynamic> = new Map();
+
+	public static var phoneDatas:Dynamic;
 	
 	public static var triggers:Map<String, Dynamic> = [
 		"is_dialog"   	=> false,

@@ -11,13 +11,19 @@ import flixel.FlxSprite;
 
 import net.HttpExt;
 
+enum RequestType {
+	CLIENT;
+	FILE;
+}
+
 class Request
 {
 	public var req:HttpExt;
 	public var object:Dynamic;
 	@:isVar public var sessionTicket(default, set):String;
+	@:isVar public var entityToken(default, set):String;
 
-	private var endPoint:String = "https://594E.playfabapi.com/Client/";
+	private var endPoint:String = "https://594E.playfabapi.com";
 	private var callback:Void->Void = null;
 
 	public function new():Void {}
@@ -26,13 +32,32 @@ class Request
 	{
 		return sessionTicket = value;
 	}
-	
-	public function makeRequest(Method:String, Params:Dynamic, Callback:Dynamic->Dynamic->Void): Void
+
+	public function set_entityToken(value:String):String
 	{
+		return entityToken = value;
+	}
+	
+	public function makeRequest(Method:String, Params:Dynamic, Callback:Dynamic->Dynamic->Void, ?Type:RequestType): Void
+	{
+		if (Type == null)
+		{
+			Type = CLIENT;
+		}
+
 		req = new HttpExt('${endPoint}${Method}');
 		trace('SessionTicket: $sessionTicket');
-		req.setHeader("content-type", "application/json");
-		req.setHeader("X-Authentication", sessionTicket);
+		req.setHeader("Content-Type", "application/json");
+		if (Type == CLIENT)
+		{
+			req.setHeader("X-Authentication", sessionTicket);
+		}
+		
+		if (Type == FILE)
+		{
+			req.setHeader("X-EntityToken", entityToken);
+		}
+
 		req.setPostData(Params);
 		req.request(true);
 		

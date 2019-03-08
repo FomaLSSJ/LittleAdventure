@@ -1,7 +1,7 @@
 const net = require('net')
-const port = 443
- 
-const server = net.createServer(socket => {
+const netPort = 443
+
+const socketServer = net.createServer(socket => {
 	socket.on('data', data => {
         console.log("data received: " + data)
         
@@ -23,4 +23,4 @@ const server = net.createServer(socket => {
 	})
 })
  
-server.listen(port, () => console.info(`Socket server start on port ${ port }`))
+socketServer.listen(netPort, () => console.info(`Socket server start on port ${ netPort }`))

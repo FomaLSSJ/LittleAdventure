@@ -21,6 +21,8 @@ import layout.Loader;
 class MenuState extends FlxState
 {
 	private var sessionTicket:String;
+	private var entityToken:String;
+	private var entity:Dynamic;
 	private var statusMessage:FlxText;
 	private var background:FlxSprite;
 
@@ -83,9 +85,11 @@ class MenuState extends FlxState
 		
 		Reg.save.bind("playfab");
 		sessionTicket = Reg.save.data.ticket;
+		entityToken = Reg.save.data.entityToken;
+		entity = Reg.save.data.entity;
 		Reg.save.close();
 		trace(sessionTicket);
-		Reg.client.setSessionTicket(sessionTicket);
+		Reg.client.setSessionTicket(sessionTicket, entity, entityToken);
 		trace(Reg.client.getSessionTicket());
 
 		#if debug
@@ -156,8 +160,16 @@ class MenuState extends FlxState
 		add(mainGroup);
 		add(authGroup);
 
-		var url:String = "https://hentaigamecg.com/cache/Taimanin-Yukikaze/217_Taimanin_Yukikaze_75_595.jpg";
-		onGetImage(url);
+		Reg.client.getFiles(function (res:Dynamic):Void
+		{
+			if (res.code != 200)
+			{
+				return;
+			}
+
+			var item:Dynamic = Reflect.field(res.data.Metadata, "asuka.png");
+			onGetImage(item.DownloadUrl);
+		});
 		
 		var loader:Loader = new layout.Loader();
 		add(loader);
@@ -297,6 +309,13 @@ class MenuState extends FlxState
 		{
 			layout = res;
 			layout.visible = layout.active = false;
+
+			if (layout.width > FlxG.width)
+			{
+				layout.setGraphicSize(FlxG.width);
+				layout.updateHitbox();
+			}
+
 			add(layout);
 			trace("Layout init complete");
 		});

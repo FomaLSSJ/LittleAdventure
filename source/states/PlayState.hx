@@ -46,6 +46,15 @@ class PlayState extends FlxState
 		{
 			Reg.inv.useItem();
 		});
+
+		FlxG.console.registerFunction("getCharacterData", function ():Void
+		{
+			Reg.client.getCharacterData();
+		});
+
+		FlxG.console.registerFunction("getFiles", function ():Void{
+			Reg.client.getFiles();
+		});
 		
 		#if flash
 		Lib.current.stage.application.onExit.add(function (code):Void
@@ -99,12 +108,12 @@ class PlayState extends FlxState
 			[ "key" => "string",   "data" => "Richard: Hey how are you today!" ],
 			[ "key" => "string",   "data" => "You: I'm ok, thank you." ],
 			[ "key" => "string",   "data" => "Richard: Do you want some candy?" ],
-			[ "key" => "function", "data" => { "field": "calc", "args": [ 3, 3 ] } ],
+			[ "key" => "function", "data" => { field: "calc", args: [ 3, 3 ] } ],
 			[ "key" => "string",   "data" => "You: No."],
 			[ "key" => "string",   "data" => "Richard: Ok, take this Letter." ],
-			[ "key" => "function", "data" => {"field": "addItem", "args": [ "letter" ]} ],
+			[ "key" => "function", "data" => { field: "addItem", args: [ "letter" ] } ],
 			[ "key" => "string",   "data" => "Richard: And this Diskette." ],
-			[ "key" => "function", "data" => {"field": "addItem", "args": [ "diskette" ]} ],
+			[ "key" => "function", "data" => { field: "addItem", args: [ "diskette" ] } ],
 			[ "key" => "string",   "data" => "You: Thanks." ]
 		];
 
